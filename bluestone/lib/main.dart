@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bluestone/src/components/appBar.dart';
+import 'package:bluestone/src/components/menuBuilder.dart';
 
 void main() => runApp(MyApp());
 
@@ -27,62 +27,68 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
   
+  var _cardItems = MenuBuilder.buildItem("Card");
+  var _calendarItems = MenuBuilder.buildItem("Calendar");
+
+  //   for(var index in _cardItems){
+  //   new IconButton(
+  //     icon: index.icon,
+  //     iconSize: index.iconSize,
+  //     color: index.color,
+  //     tooltip: index.tooltip,
+  //     onPressed: index.onPressed,
+  //   );
+  // }
   @override
   Widget build(BuildContext context) {
-    int _display = _counter + 5;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          widget.title,
-          textAlign: TextAlign.left,
+    return DefaultTabController(
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            widget.title,
+            textAlign: TextAlign.left,
+            ),
+          flexibleSpace: Container(
+            alignment: Alignment(0.85,-0.3),
+            child: IconButton(
+              icon: Icon(Icons.person),
+              iconSize: 35.0,
+              color: Colors.blueAccent,
+              tooltip: "Placeholder button user profile access.",
+              onPressed: null,
+            ),
           ),
-        flexibleSpace: Container(
-          alignment: Alignment(0.85,1),
-          child: IconButton(
-            icon: Icon(Icons.person),
-            iconSize: 35.0,
-            color: Colors.blueAccent,
-            tooltip: "Placeholder button user profile access.",
-            onPressed: null,
+          bottom: TabBar(
+            tabs: [
+              Tab(icon: Icon(Icons.view_list)),
+              Tab(icon: Icon(Icons.calendar_today)),
+            ],
           ),
         ),
-      ),
-      body: Expanded(
-        child: Flex(
-          mainAxisAlignment: MainAxisAlignment.center,
-          direction: Axis.vertical,
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Text(
-                  'You have pushed the button this many times:',
-                )
+        body: TabBarView(
+          children: [
+            ListView.builder( 
+              itemCount: _cardItems.length,
+              itemBuilder: (context, index){
+                return IconButton(
+                  icon: _cardItems[index].icon,
+                  iconSize: _cardItems[index].iconSize,
+                  color: _cardItems[index].color,
+                  tooltip: _cardItems[index].tooltip,
+                  onPressed: _cardItems[index].onPressed,
+                );
+              },
+            ),// Display list of cards here
+            ListView( 
+              children: [
+
               ],
-            ),
-            Row(
-              children: <Widget>[
-                Text(
-                  '$_display',
-                  style: Theme.of(context).textTheme.display1,
-                )
-              ],
-            ),
+            ), // display list of calendars here
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
