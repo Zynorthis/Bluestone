@@ -43,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -67,25 +67,45 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
+        backgroundColor: Colors.blue[50],
         body: TabBarView(
           children: [
             ListView.builder( 
               itemCount: _cardItems.length,
-              itemBuilder: (context, index){
+              itemBuilder: (context, i){
+                if (i.isOdd){
+                  return Divider();
+                }
+                final index = i~/2;
                 return IconButton(
                   icon: _cardItems[index].icon,
                   iconSize: _cardItems[index].iconSize,
                   color: _cardItems[index].color,
+                  splashColor: _cardItems[index].splashColor,
+                  padding: _cardItems[index].padding,
                   tooltip: _cardItems[index].tooltip,
                   onPressed: _cardItems[index].onPressed,
                 );
               },
-            ),// Display list of cards here
-            ListView( 
-              children: [
-
-              ],
-            ), // display list of calendars here
+            ),
+            ListView.builder( 
+              itemCount: _calendarItems.length,
+              itemBuilder: (context, i){
+                if (i.isOdd){
+                  return Divider();
+                }
+                final index = i~/2;
+                return new IconButton(
+                  icon: _calendarItems[index].icon,
+                  iconSize: _calendarItems[index].iconSize,
+                  color: _calendarItems[index].color,
+                  splashColor: _calendarItems[index].splashColor,
+                  padding: _calendarItems[index].padding,
+                  tooltip: _calendarItems[index].tooltip,
+                  onPressed: _calendarItems[index].onPressed,
+                );
+              },
+            ),
           ],
         ),
       ),
