@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:bluestone/src/components/menuBuilder.dart';
+import 'package:bluestone/src/components/extras.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+
+  final appName = "Bluestone";
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Bluestone',
+      title: appName,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: ThemeSettings.themeData.primaryColor,
       ),
       home: MyHomePage(title: 'Bluestone [Local dev build]'),
     );
@@ -28,18 +31,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   
-  var _cardItems = MenuBuilder.buildItem("Card");
-  var _calendarItems = MenuBuilder.buildItem("Calendar");
+  var _cardItems = MenuBuilder.buildItems("Card");
+  var _calendarItems = MenuBuilder.buildItems("Calendar");
 
-  //   for(var index in _cardItems){
-  //   new IconButton(
-  //     icon: index.icon,
-  //     iconSize: index.iconSize,
-  //     color: index.color,
-  //     tooltip: index.tooltip,
-  //     onPressed: index.onPressed,
-  //   );
-  // }
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -66,43 +60,57 @@ class _MyHomePageState extends State<MyHomePage> {
               Tab(icon: Icon(Icons.calendar_today)),
             ],
           ),
-        ),
-        backgroundColor: Colors.blue[50],
+        ),  
+        backgroundColor: ThemeSettings.themeData.backgroundColor,
         body: TabBarView(
           children: [
             ListView.builder( 
+              padding: const EdgeInsets.all(16.0),
               itemCount: _cardItems.length,
               itemBuilder: (context, i){
                 if (i.isOdd){
                   return Divider();
                 }
                 final index = i~/2;
-                return IconButton(
-                  icon: _cardItems[index].icon,
-                  iconSize: _cardItems[index].iconSize,
-                  color: _cardItems[index].color,
-                  splashColor: _cardItems[index].splashColor,
-                  padding: _cardItems[index].padding,
-                  tooltip: _cardItems[index].tooltip,
-                  onPressed: _cardItems[index].onPressed,
-                );
+                return Container(
+                  decoration: BoxDecoration(
+                    color: ThemeSettings.themeData.accentColor,
+                    shape: BoxShape.rectangle
+                  ),
+                  child: IconButton(
+                    icon: _cardItems[index].icon,
+                    iconSize: _cardItems[index].iconSize,
+                    color: _cardItems[index].color,
+                    splashColor: _cardItems[index].splashColor,
+                    padding: _cardItems[index].padding,
+                    tooltip: _cardItems[index].tooltip,
+                    onPressed: _cardItems[index].onPressed,
+                  ),
+                ); 
               },
-            ),
+            ), 
             ListView.builder( 
+              padding: const EdgeInsets.all(16.0),
               itemCount: _calendarItems.length,
               itemBuilder: (context, i){
                 if (i.isOdd){
                   return Divider();
                 }
                 final index = i~/2;
-                return new IconButton(
-                  icon: _calendarItems[index].icon,
-                  iconSize: _calendarItems[index].iconSize,
-                  color: _calendarItems[index].color,
-                  splashColor: _calendarItems[index].splashColor,
-                  padding: _calendarItems[index].padding,
-                  tooltip: _calendarItems[index].tooltip,
-                  onPressed: _calendarItems[index].onPressed,
+                return new Container(
+                  decoration: BoxDecoration(
+                    color: ThemeSettings.themeData.accentColor,
+                    shape: BoxShape.rectangle
+                  ),
+                  child: IconButton(
+                    icon: _calendarItems[index].icon,
+                    iconSize: _calendarItems[index].iconSize,
+                    color: _calendarItems[index].color,
+                    splashColor: _calendarItems[index].splashColor,
+                    padding: _calendarItems[index].padding,
+                    tooltip: _calendarItems[index].tooltip,
+                    onPressed: _calendarItems[index].onPressed,
+                  ),
                 );
               },
             ),
