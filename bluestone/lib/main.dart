@@ -1,6 +1,10 @@
+import 'package:bluestone/src/loginPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bluestone/src/components/menuBuilder.dart';
 import 'package:bluestone/src/components/extras.dart';
+
+//title: 'Bluestone [Local dev build]'
 
 void main() => runApp(MyApp());
 
@@ -15,14 +19,15 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: ThemeSettings.themeData.primaryColor,
       ),
-      home: MyHomePage(title: 'Bluestone [Local dev build]'),
+      home: SignInManager(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key key, this.title, @required this.user}) : super(key: key);
 
+  final FirebaseUser user;
   final String title;
 
   @override
@@ -50,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: Icon(Icons.person),
               iconSize: 35.0,
               color: Colors.blueAccent,
-              tooltip: "Placeholder button user profile access.",
+              tooltip: "${widget.user.email} is logged in.",
               onPressed: null,
             ),
           ),

@@ -19,8 +19,7 @@ import 'package:flutter/material.dart';
 ///     fontWeight: FontWeight.bold
 ///   ),
 ///   title: TextStyle(
-///     fontSize: 36.0, 
-///     fontStyle: FontStyle.italic
+///     fontFamily: "Malgun Gothic",
 ///   ),
 ///   body1: TextStyle(
 ///     fontSize: 14.0, 
@@ -39,7 +38,7 @@ class ThemeSettings {
 
   static final customTheme = new TextTheme(
     headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-    title: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
+    title: TextStyle(fontFamily: "Malgun Gothic"),
     body1: TextStyle(fontSize: 14.0, fontFamily: "Malgun Gothic"),
   );
 }
