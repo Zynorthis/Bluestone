@@ -14,7 +14,7 @@ class _SignInManagerState extends State<SignInManager> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return new Scaffold(
       appBar: AppBar(
         title: Text("Sign In"),
         textTheme: ThemeSettings.customTheme,
@@ -66,7 +66,11 @@ class _SignInManagerState extends State<SignInManager> {
               ),
             ),
             RaisedButton(
-              onPressed: signIn,
+              onPressed: () {
+                signIn();
+                // final snackBar = SnackBar(content: Text("Logging in..."));
+                // Scaffold.of(context).showSnackBar(snackBar);
+              },
               child: Text("Sign In"),
               color: ThemeSettings.themeData.accentColor,
             )
@@ -80,11 +84,6 @@ class _SignInManagerState extends State<SignInManager> {
     final _formState = _formKey.currentState;
     if (_formState.validate()) {
       _formState.save();
-      // // If the form is valid, we want to show a Snackbar
-      // if(_formKey.currentState.validate()){
-      //   Scaffold.of(context).showSnackBar(
-      //     SnackBar(content: Text('Login Successful, please wait...')));
-      // }
       try {
         FirebaseUser user = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: _email, password: _password);
@@ -93,9 +92,9 @@ class _SignInManagerState extends State<SignInManager> {
             context,
             MaterialPageRoute(
                 builder: (context) => MyHomePage(
-                    title: ThemeSettings.defaultTitle,
-                    user: user,
-                  )));
+                      title: ThemeSettings.defaultTitle,
+                      user: user,
+                    )));
       } catch (error) {
         print(error.message);
       }

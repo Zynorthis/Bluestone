@@ -1,4 +1,4 @@
-# <span style="color:royalblue"> Bluestone </style>
+# <span style="color:royalblue"> Bluestone
 
 Project Bluestone is an application designed to simply and easily organize and keep track of anything. 
 
@@ -14,9 +14,11 @@ Cards are the essential building blocks used to organize data and information ne
 
 Just to name a few! 
 
-Calendars are your standard calendar applications that you're use to but with a little extra to give you extra 
+Calendars are your standard calendar applications that you're use to but with a little extra customization capability to enhance readablity and overall user experience.
 
 ## Development Process
+
+Bluestone was developted in a two week sprint as a proof of concept mobile application. 
 
 ## Installing
 

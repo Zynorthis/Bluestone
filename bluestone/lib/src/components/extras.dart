@@ -44,5 +44,5 @@ class ThemeSettings {
     body1: TextStyle(fontSize: 14.0, fontFamily: "Malgun Gothic"),
   );
 
-  static final defaultTitle = 'Bluestone [Local dev build]';
+  static final String defaultTitle = 'Bluestone [Local dev build]';
 }

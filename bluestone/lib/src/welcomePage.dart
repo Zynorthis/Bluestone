@@ -16,28 +16,40 @@ class _WelcomePageState extends State<WelcomePage> {
         title: Text(ThemeSettings.defaultTitle),
       ),
       backgroundColor: ThemeSettings.themeData.backgroundColor,
-      body: Column(
-        children: <Widget>[
-          RaisedButton(
-            onPressed: navigateToLoginPage,
-            child: Text("Sign In"),
-            color: ThemeSettings.themeData.accentColor,
-          ),
-          RaisedButton(
-            onPressed: navigateToRegisterPage,
-            child: Text("Resgister"),
-            color: ThemeSettings.themeData.accentColor,
-          ),
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //crossAxisAlignment: CrossAxisAlignment,
+          children: <Widget>[
+            RaisedButton(
+              padding: EdgeInsets.fromLTRB(50.0, 10.0, 50.0, 10.0),
+              onPressed: navigateToLoginPage,
+              child: Text("Sign In", textScaleFactor: 2.0),
+              color: ThemeSettings.themeData.accentColor,
+            ),
+            RaisedButton(
+              padding: EdgeInsets.fromLTRB(50.0, 10.0, 50.0, 10.0),
+              onPressed: navigateToRegisterPage,
+              child: Text("Register", textScaleFactor: 2.0),
+              color: ThemeSettings.themeData.accentColor,
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  void navigateToLoginPage(){
-    Navigator.push(context, MaterialPageRoute(builder: (context) => SignInManager(), fullscreenDialog: true));
+  void navigateToLoginPage() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => SignInManager(), fullscreenDialog: true));
   }
 
-  void navigateToRegisterPage(){
-    Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage(), fullscreenDialog: true));
+  void navigateToRegisterPage() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => RegisterPage(), fullscreenDialog: true));
   }
 }
