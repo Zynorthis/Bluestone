@@ -1,4 +1,4 @@
-# <span style="color:royalblue"> Bluestone </style>
+# <span style="color:royalblue"> Bluestone
 
 Project Bluestone is an application designed to simply and easily organize and keep track of anything. 
 
