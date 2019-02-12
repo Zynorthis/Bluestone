@@ -1,4 +1,4 @@
-import 'package:bluestone/src/loginPage.dart';
+import 'package:bluestone/src/welcomePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bluestone/src/components/menuBuilder.dart';
@@ -19,13 +19,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: ThemeSettings.themeData.primaryColor,
       ),
-      home: SignInManager(),
+      home: WelcomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title, @required this.user}) : super(key: key);
+  MyHomePage({Key key, this.title, this.user}) : super(key: key);
 
   final FirebaseUser user;
   final String title;

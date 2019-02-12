@@ -21,6 +21,7 @@ class MenuBuilder {
       // add all of the calendars save for a user here.
     }
     else {
+      print("Error: invalid type - Type being passed in was unable to be determined. (menuBuilder.dart - line 24)");
       throw new Exception("Error: invalid type - Type being passed in was unable to be determined.");
     }
 

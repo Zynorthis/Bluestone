@@ -25,6 +25,8 @@ import 'package:flutter/material.dart';
 ///     fontSize: 14.0, 
 ///     fontFamily: "Malgun Gothic"
 ///   ),
+/// 
+///   static final defaultTitle = 'Bluestone [Local dev build]';
 /// ```
 
 class ThemeSettings {
@@ -38,7 +40,9 @@ class ThemeSettings {
 
   static final customTheme = new TextTheme(
     headline: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-    title: TextStyle(fontFamily: "Malgun Gothic"),
+    title: TextStyle(fontSize: 25.0, fontFamily: "Malgun Gothic"),
     body1: TextStyle(fontSize: 14.0, fontFamily: "Malgun Gothic"),
   );
+
+  static final defaultTitle = 'Bluestone [Local dev build]';
 }
