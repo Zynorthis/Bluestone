@@ -65,7 +65,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
             RaisedButton(
               onPressed: registerFirebaseAccount,
-              child: Text("Let's Begin!"),
+              child: Text("Register"),
               color: ThemeSettings.themeData.accentColor,
             )
           ],

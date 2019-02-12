@@ -88,7 +88,8 @@ class _SignInManagerState extends State<SignInManager> {
         FirebaseUser user = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: _email, password: _password);
         // Navigator.pop(context);
-        Navigator.push(
+        Navigator.of(context).pop();
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => MyHomePage(
