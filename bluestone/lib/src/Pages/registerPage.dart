@@ -1,23 +1,21 @@
-import 'package:bluestone/main.dart';
 import 'package:bluestone/src/components/extras.dart';
+import 'package:bluestone/src/Pages/loginPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class SignInManager extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   @override
-  _SignInManagerState createState() => new _SignInManagerState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _SignInManagerState extends State<SignInManager> {
-  String _email, _password;
+class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  String _email, _password;
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(
-        title: Text("Sign In"),
-        textTheme: ThemeSettings.customTheme,
+        title: Text("Register"),
       ),
       backgroundColor: ThemeSettings.themeData.backgroundColor,
       body: Form(
@@ -66,12 +64,8 @@ class _SignInManagerState extends State<SignInManager> {
               ),
             ),
             RaisedButton(
-              onPressed: () {
-                signIn();
-                // final snackBar = SnackBar(content: Text("Logging in..."));
-                // Scaffold.of(context).showSnackBar(snackBar);
-              },
-              child: Text("Sign In"),
+              onPressed: registerFirebaseAccount,
+              child: Text("Register"),
               color: ThemeSettings.themeData.accentColor,
             )
           ],
@@ -80,22 +74,16 @@ class _SignInManagerState extends State<SignInManager> {
     );
   }
 
-  Future<void> signIn() async {
-    final _formState = _formKey.currentState;
-    if (_formState.validate()) {
-      _formState.save();
+  void registerFirebaseAccount() async {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
       try {
         FirebaseUser user = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: _email, password: _password);
-        // Navigator.pop(context);
+            .createUserWithEmailAndPassword(email: _email, password: _password);
+        user.sendEmailVerification();
         Navigator.of(context).pop();
         Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => MyHomePage(
-                      title: ThemeSettings.defaultTitle,
-                      user: user,
-                    )));
+            context, MaterialPageRoute(builder: (context) => SignInManager()));
       } catch (error) {
         print(error.message);
       }

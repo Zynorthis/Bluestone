@@ -1,21 +1,23 @@
+import 'package:bluestone/src/Pages/homePage.dart';
 import 'package:bluestone/src/components/extras.dart';
-import 'package:bluestone/src/loginPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class RegisterPage extends StatefulWidget {
+class SignInManager extends StatefulWidget {
   @override
-  _RegisterPageState createState() => _RegisterPageState();
+  _SignInManagerState createState() => new _SignInManagerState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+class _SignInManagerState extends State<SignInManager> {
   String _email, _password;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(
-        title: Text("Register"),
+        title: Text("Sign In"),
+        textTheme: ThemeSettings.customTheme,
       ),
       backgroundColor: ThemeSettings.themeData.backgroundColor,
       body: Form(
@@ -31,11 +33,12 @@ class _RegisterPageState extends State<RegisterPage> {
                     return "Please provide an email address.";
                   } else if (!input.contains("@")) {
                     return "Please provide a valid email address.";
-                  } else if (input.contains(" ")) {
-                    return input = input.trim();
-                  }
+                  } 
+                  // else if (input.contains(" ")) {
+                  //   return input = input.trim();
+                  // }
                 },
-                onSaved: (input) => _email = input,
+                onSaved: (input) => _email = input.trim(),
                 decoration: InputDecoration(
                   labelText: "Email Address",
                   contentPadding: EdgeInsets.all(10.0),
@@ -64,8 +67,12 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ),
             RaisedButton(
-              onPressed: registerFirebaseAccount,
-              child: Text("Register"),
+              onPressed: () {
+                signIn();
+                // final snackBar = SnackBar(content: Text("Logging in..."));
+                // Scaffold.of(context).showSnackBar(snackBar);
+              },
+              child: Text("Sign In"),
               color: ThemeSettings.themeData.accentColor,
             )
           ],
@@ -74,16 +81,22 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  void registerFirebaseAccount() async {
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
+  Future<void> signIn() async {
+    final _formState = _formKey.currentState;
+    if (_formState.validate()) {
+      _formState.save();
       try {
         FirebaseUser user = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(email: _email, password: _password);
-        user.sendEmailVerification();
+            .signInWithEmailAndPassword(email: _email, password: _password);
+        // Navigator.pop(context);
         Navigator.of(context).pop();
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => SignInManager()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => MyHomePage(
+                      title: ThemeSettings.defaultTitle,
+                      user: user,
+                    )));
       } catch (error) {
         print(error.message);
       }

@@ -1,6 +1,6 @@
 import 'package:bluestone/src/components/extras.dart';
-import 'package:bluestone/src/loginPage.dart';
-import 'package:bluestone/src/registerPage.dart';
+import 'package:bluestone/src/Pages/loginPage.dart';
+import 'package:bluestone/src/Pages/registerPage.dart';
 import 'package:flutter/material.dart';
 
 class WelcomePage extends StatefulWidget {
