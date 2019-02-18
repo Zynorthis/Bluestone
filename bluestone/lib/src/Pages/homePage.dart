@@ -13,10 +13,13 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
+// static final FirebaseUser user = MyHomePage
+
 class _MyHomePageState extends State<MyHomePage> {
-  
-  var _cardItems = MenuBuilder.buildItems("Card");
-  var _calendarItems = MenuBuilder.buildItems("Calendar");
+  // _MyHomePageState({ this.user })
+  static var user;
+  var _cardItems = MenuBuilder.buildItems("Card", user);
+  var _calendarItems = MenuBuilder.buildItems("Calendar", user);
 
   @override
   Widget build(BuildContext context) {
@@ -27,15 +30,37 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text(
             widget.title,
             textAlign: TextAlign.left,
-            ),
+          ),
           flexibleSpace: Container(
-            alignment: Alignment(0.85,-0.3),
+            alignment: Alignment(0.85, -0.3),
             child: IconButton(
               icon: Icon(Icons.person),
               iconSize: 35.0,
-              color: Colors.blueAccent,
+              color: Colors.white,
               tooltip: "${widget.user.email} is logged in.",
-              onPressed: null,
+              onPressed: () {
+                print("Starting OnPress Action.");
+                var thing = new SimpleDialog(
+                  title: Text("Select a User Account"),
+                  children: <Widget>[
+                    FlatButton(
+                      onPressed: null,
+                      child: Row(children: <Widget>[
+                        Icon(Icons.person),
+                        Text("${widget.user.email}"),
+                      ],) 
+                    ),
+                  ],
+                );
+                assert(AlertDialog != null);
+                print("Finishing Construction of OnPress Action");
+                return showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) {
+                      return thing;
+                    });
+              },
             ),
           ),
           bottom: TabBar(
@@ -44,23 +69,22 @@ class _MyHomePageState extends State<MyHomePage> {
               Tab(icon: Icon(Icons.calendar_today)),
             ],
           ),
-        ),  
+        ),
         backgroundColor: ThemeSettings.themeData.backgroundColor,
         body: TabBarView(
           children: [
-            ListView.builder( 
+            ListView.builder(
               padding: const EdgeInsets.all(16.0),
               itemCount: _cardItems.length,
-              itemBuilder: (context, i){
-                if (i.isOdd){
+              itemBuilder: (context, i) {
+                if (i.isOdd) {
                   return Divider();
                 }
-                final index = i~/2;
+                final index = i ~/ 2;
                 return Container(
                   decoration: BoxDecoration(
-                    color: ThemeSettings.themeData.accentColor,
-                    shape: BoxShape.rectangle
-                  ),
+                      color: ThemeSettings.themeData.accentColor,
+                      shape: BoxShape.rectangle),
                   child: IconButton(
                     icon: _cardItems[index].icon,
                     iconSize: _cardItems[index].iconSize,
@@ -70,22 +94,21 @@ class _MyHomePageState extends State<MyHomePage> {
                     tooltip: _cardItems[index].tooltip,
                     onPressed: _cardItems[index].onPressed,
                   ),
-                ); 
+                );
               },
-            ), 
-            ListView.builder( 
+            ),
+            ListView.builder(
               padding: const EdgeInsets.all(16.0),
               itemCount: _calendarItems.length,
-              itemBuilder: (context, i){
-                if (i.isOdd){
+              itemBuilder: (context, i) {
+                if (i.isOdd) {
                   return Divider();
                 }
-                final index = i~/2;
+                final index = i ~/ 2;
                 return new Container(
                   decoration: BoxDecoration(
-                    color: ThemeSettings.themeData.accentColor,
-                    shape: BoxShape.rectangle
-                  ),
+                      color: ThemeSettings.themeData.accentColor,
+                      shape: BoxShape.rectangle),
                   child: IconButton(
                     icon: _calendarItems[index].icon,
                     iconSize: _calendarItems[index].iconSize,
@@ -103,4 +126,25 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+  Future showDialogBox(BuildContext context){
+          print("Starting OnPress Action.");
+          var thing = new SimpleDialog(
+            title: Text("Select a Card Type"),
+            children: <Widget>[
+              FlatButton(
+                onPressed: null,
+                child: Text("Sticky"),
+              ),
+            ],
+          );
+          assert(AlertDialog != null);
+          print("Finishing Construction of OnPress Action");
+          return showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (BuildContext context) {
+                return thing;
+              });
+        }
 }

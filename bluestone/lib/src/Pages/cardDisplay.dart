@@ -2,50 +2,59 @@ import 'package:bluestone/src/components/extras.dart';
 import 'package:flutter/material.dart';
 
 class CardDisplay extends StatefulWidget {
-  const CardDisplay({Key key, @required this.cardType, this.cardTitle});
+  const CardDisplay({UniqueKey key, this.cardType, this.cardTitle});
 
   final String cardType;
   final String cardTitle;
   @override
-  _CardDisplayState createState() => _CardDisplayState();
+  _CardDisplayState createState() => new _CardDisplayState();
 }
 
 class _CardDisplayState extends State<CardDisplay> {
-  String _cardTitle;
-  bool isEdittingTitle;
-  bool isEdittingBody;
+  String _cardTitle = "Testing...";
+  bool isEditting = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(_cardTitle),
+          title: new Text("_cardTitle"),
         ),
         backgroundColor: ThemeSettings.themeData.backgroundColor,
-        body: Column(
-          children: <Widget>[
-            // Padding holds container to hold title
-            Container(
-              height: 20.0,
-              child: isEdittingTitle
-                  ? Row(
-                      children: <Widget>[TextField(), Icon(Icons.edit)],
-                    )
-                  : Row(
-                      children: <Widget>[Text("Placeholder Title"), Icon(Icons.save)],
-                    ),
-            ),
-            // Padding holds child for textbox
-            Container(
-              height: 80.0,
-              child: isEdittingBody
-                  ? Row(
-                      children: <Widget>[TextField(), Icon(Icons.edit)],
-                    )
-                  : Row(
-                      children: <Widget>[Text("Placeholder Body Text"), Icon(Icons.save)],
-                    ),
-            ),
-          ],
+        body: Center(
+          child: Column(
+            
+            children: <Widget>[
+              // Padding holds container to hold title
+              Container(
+                height: 20.0,
+                child: (isEditting)
+                    ? new Row(
+                        children: <Widget>[TextField(), IconButton(icon: Icon(Icons.save), onPressed: enableEditting,)],
+                      )
+                    : new Row(
+                        children: <Widget>[Text("Placeholder Title"), IconButton(icon: Icon(Icons.edit), onPressed: enableEditting,)],
+                      ),
+              ),
+              // Padding holds child for textbox
+              Container(
+                height: 80.0,
+                child: (isEditting)
+                    ? new Row(
+                        children: <Widget>[TextField(), IconButton(icon: Icon(Icons.save), onPressed: enableEditting,)],
+                      )
+                    : new Row(
+                        children: <Widget>[Text("Placeholder Body Text"), IconButton(icon: Icon(Icons.edit), onPressed: enableEditting,)],
+                      ),
+              ),
+            ],
+          ),
         ));
+  }
+  void enableEditting(){
+    setState(() {
+      isEditting = !isEditting;
+      isEditting ? print("Editting Enabled") : print("Editting Disabled"); 
+    }); 
   }
 }
