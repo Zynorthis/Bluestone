@@ -1,25 +1,27 @@
+import 'package:bluestone/src/Pages/homePage.dart';
 import 'package:bluestone/src/components/extras.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class StickyDisplay extends StatefulWidget {
-  const StickyDisplay({UniqueKey key, this.cardType, this.cardTitle});
+  const StickyDisplay({UniqueKey key});
 
-  final String cardType;
-  final String cardTitle;
   @override
   _StickyDisplayState createState() => new _StickyDisplayState();
 }
 
 class _StickyDisplayState extends State<StickyDisplay> {
-  String _cardTitle = "Testing...";
-  TextEditingController _controller = new TextEditingController();
+  static const String _cardTitle = "Testing...";
+  TextEditingController _titleController = new TextEditingController();
+  TextEditingController _textBodyController = new TextEditingController();
   bool isEditting = false;
+  final DocumentReference firestoreDoc = Firestore.instance.document("TestData/TestDocument");
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: new Text("_cardTitle"),
+          title: Text(_cardTitle),
         ),
         backgroundColor: ThemeSettings.themeData.backgroundColor,
         floatingActionButton: new FloatingActionButton.extended(
@@ -27,6 +29,9 @@ class _StickyDisplayState extends State<StickyDisplay> {
             onPressed: () {
               setState(() {
                 isEditting = !isEditting;
+                if (isEditting == false){
+                  _saveEditsToDb();
+                }
               });
             },
             label: (isEditting) ? Text("Save") : Text("Edit")),
@@ -39,13 +44,13 @@ class _StickyDisplayState extends State<StickyDisplay> {
                 margin: const EdgeInsets.all(10.0),
                 child: (isEditting)
                     ? new TextFormField(
-                        controller: _controller,
+                        controller: _titleController,
                         enableInteractiveSelection: false,
                         maxLength: 18,
                       )
                     : new Row(children: <Widget>[
                         Text(
-                          _controller.value.text,
+                          _titleController.value.text,
                           textScaleFactor: 1.5,
                         ),
                       ]),
@@ -56,13 +61,12 @@ class _StickyDisplayState extends State<StickyDisplay> {
                 margin: const EdgeInsets.all(10.0),
                 child: (isEditting)
                     ? 
-              new TextFormField(
-                  controller: _controller,
+              new TextField(
+                  controller: _textBodyController,
                   enableInteractiveSelection: false,
-                  maxLength: 18,
                 )
               : new Row(children: <Widget>[
-                  Text(_controller.value.text, textScaleFactor: 1.5,),
+                  Text(_textBodyController.value.text, textScaleFactor: 1.5,),
                 ]),
               ),
             ],
@@ -75,5 +79,24 @@ class _StickyDisplayState extends State<StickyDisplay> {
       isEditting = !isEditting;
       isEditting ? print("Editting Enabled") : print("Editting Disabled");
     });
+  }
+
+  void _saveEditsToDb() async {
+    Map<String, String> data = <String, String>{
+      "title" : _titleController.value.text,
+      "textBody" : _textBodyController.value.text,
+    };
+    firestoreDoc.updateData(data).whenComplete(() {
+      print("Document Updated.");
+      setState(() {});
+    }).catchError((e) => print(e));
+  }
+  void _removeFromDb() async {
+    firestoreDoc.delete().whenComplete(() {
+      print("Removed Document.");
+      setState(() {});
+    }).catchError((e) => print(e));
+    Navigator.pop(context);
+    //Navigator.push(context, MyHomePage());
   }
 }

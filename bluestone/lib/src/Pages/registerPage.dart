@@ -40,6 +40,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   labelText: "Email Address",
                   contentPadding: EdgeInsets.all(10.0),
                   hintText: "Input an Email Address",
+                  icon: new Icon(
+                    Icons.email,
+                    color: ThemeSettings.themeData.accentColor,
+                  ),
                 ),
               ),
             ),
@@ -59,6 +63,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   labelText: "Password",
                   contentPadding: EdgeInsets.all(10.0),
                   hintText: "Input a Password",
+                  icon: new Icon(
+                    Icons.lock,
+                    color: ThemeSettings.themeData.accentColor,
+                  ),
                 ),
                 obscureText: true,
               ),
@@ -81,7 +89,7 @@ class _RegisterPageState extends State<RegisterPage> {
         FirebaseUser user = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: _email, password: _password);
         user.sendEmailVerification();
-        Navigator.of(context).pop();
+        //Navigator.of(context).pop();
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => SignInManager()));
       } catch (error) {

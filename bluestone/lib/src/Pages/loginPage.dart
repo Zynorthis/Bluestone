@@ -43,6 +43,10 @@ class _SignInManagerState extends State<SignInManager> {
                   labelText: "Email Address",
                   contentPadding: EdgeInsets.all(10.0),
                   hintText: "Input an Email Address",
+                  icon: new Icon(
+                    Icons.email,
+                    color: ThemeSettings.themeData.accentColor,
+                  ),
                 ),
               ),
             ),
@@ -62,6 +66,10 @@ class _SignInManagerState extends State<SignInManager> {
                   labelText: "Password",
                   contentPadding: EdgeInsets.all(10.0),
                   hintText: "Input a Password",
+                  icon: new Icon(
+                    Icons.lock,
+                    color: ThemeSettings.themeData.accentColor,
+                  ),
                 ),
                 obscureText: true,
               ),

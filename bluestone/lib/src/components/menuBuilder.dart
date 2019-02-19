@@ -40,7 +40,7 @@ class MenuBuilder {
         iconSize: 125.0,
         color: Colors.blueAccent,
         //padding: EdgeInsets.all(25.0),
-        tooltip: "Tap me to create a news $type!",
+        tooltip: "Tap me to create a new $type!",
         onPressed: null //create new item
         );
 

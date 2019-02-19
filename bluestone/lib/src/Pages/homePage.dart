@@ -17,10 +17,10 @@ class MyHomePage extends StatefulWidget {
 enum Choices { STICKY, BULLET, CHECKBOX }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // _MyHomePageState({ this.user })
+  //_MyHomePageState({ this.user })
   static var user;
-  List<IconButton> _cardItems = buildItems("Card", user);
-  var _calendarItems = buildItems("Calendar", user);
+  static List<IconButton> _cardItems; // = buildItems("Card", user);
+  List<IconButton> _calendarItems; // = buildItems("Calendar", user);
 
   @override
   Widget build(BuildContext context) {
@@ -201,5 +201,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
     list.add(addIcon);
     return list;
+  }
+
+  void createStickyCard(){
+
   }
 }
