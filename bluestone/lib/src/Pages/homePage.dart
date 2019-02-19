@@ -8,19 +8,17 @@ class MyHomePage extends StatefulWidget {
 
   final FirebaseUser user;
   final String title;
+  List<IconButton> _cardItems;
+  List<IconButton> _calendarItems;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 // static final FirebaseUser user = MyHomePage
-enum Choices { STICKY, BULLET, CHECKBOX }
+enum CardChoices { STICKY, BULLET, CHECKBOX }
 
 class _MyHomePageState extends State<MyHomePage> {
-  //_MyHomePageState({ this.user })
-  static var user;
-  static List<IconButton> _cardItems; // = buildItems("Card", user);
-  List<IconButton> _calendarItems; // = buildItems("Calendar", user);
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   title: Text("Select a User Account"),
                   children: <Widget>[
                     SimpleDialogOption(
-                        onPressed: null,
+                        onPressed: () {print("User was selected."); Navigator.pop(context);},
                         child: Row(
                           children: <Widget>[
                             Icon(Icons.person),
@@ -77,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             ListView.builder(
               padding: const EdgeInsets.all(16.0),
-              itemCount: _cardItems.length,
+              itemCount: cardLengthReturn(),
               itemBuilder: (context, i) {
                 if (i.isOdd) {
                   return Divider();
@@ -88,20 +86,20 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: ThemeSettings.themeData.accentColor,
                       shape: BoxShape.rectangle),
                   child: IconButton(
-                    icon: _cardItems[index].icon,
-                    iconSize: _cardItems[index].iconSize,
-                    color: _cardItems[index].color,
-                    splashColor: _cardItems[index].splashColor,
-                    padding: _cardItems[index].padding,
-                    tooltip: _cardItems[index].tooltip,
-                    onPressed: _cardItems[index].onPressed,
+                    icon: widget._cardItems[index].icon,
+                    iconSize: widget._cardItems[index].iconSize,
+                    color: widget._cardItems[index].color,
+                    splashColor: widget._cardItems[index].splashColor,
+                    padding: widget._cardItems[index].padding,
+                    tooltip: widget._cardItems[index].tooltip,
+                    onPressed: widget._cardItems[index].onPressed,
                   ),
                 );
               },
             ),
             ListView.builder(
               padding: const EdgeInsets.all(16.0),
-              itemCount: _calendarItems.length,
+              itemCount: calendarLengthReturn(),
               itemBuilder: (context, i) {
                 if (i.isOdd) {
                   return Divider();
@@ -112,13 +110,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: ThemeSettings.themeData.accentColor,
                       shape: BoxShape.rectangle),
                   child: IconButton(
-                    icon: _calendarItems[index].icon,
-                    iconSize: _calendarItems[index].iconSize,
-                    color: _calendarItems[index].color,
-                    splashColor: _calendarItems[index].splashColor,
-                    padding: _calendarItems[index].padding,
-                    tooltip: _calendarItems[index].tooltip,
-                    onPressed: _calendarItems[index].onPressed,
+                    icon: widget._calendarItems[index].icon,
+                    iconSize: widget._calendarItems[index].iconSize,
+                    color: widget._calendarItems[index].color,
+                    splashColor: widget._calendarItems[index].splashColor,
+                    padding: widget._calendarItems[index].padding,
+                    tooltip: widget._calendarItems[index].tooltip,
+                    onPressed: widget._calendarItems[index].onPressed,
                   ),
                 );
               },
@@ -129,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Future<Null> showDialogBox() async {
+  Future<Null> showDialogBoxCard() async {
     switch (await showDialog(
       context: context,
       barrierDismissible: true,
@@ -138,36 +136,77 @@ class _MyHomePageState extends State<MyHomePage> {
         children: <Widget>[
           SimpleDialogOption(
             onPressed: () {
-              Navigator.pop(context, Choices.STICKY);
+              Navigator.pop(context, CardChoices.STICKY);
             },
             child: const Text("Sticky"),
           ),
           SimpleDialogOption(
             onPressed: () {
-              Navigator.pop(context, Choices.BULLET);
+              Navigator.pop(context, CardChoices.BULLET);
             },
             child: const Text("Bullet"),
           ),
           SimpleDialogOption(
             onPressed: () {
-              Navigator.pop(context, Choices.CHECKBOX);
+              Navigator.pop(context, CardChoices.CHECKBOX);
             },
             child: const Text("Checkbox"),
           ),
         ],
       ),
     )) {
-      case Choices.STICKY:
+      case CardChoices.STICKY:
         print("Card Type - Sticky - was selected.");
         break;
-      case Choices.BULLET:
+      case CardChoices.BULLET:
         print("Card Type - Bullet - was selected.");
         break;
-      case Choices.CHECKBOX:
+      case CardChoices.CHECKBOX:
         print("Card Type - Checkbox - was selected.");
         break;
     }
   }
+
+    Future<Null> showDialogBoxCalendar() async {
+    switch (await showDialog(
+      context: context,
+      barrierDismissible: true,
+      child: new SimpleDialog(
+        title: Text("Select a Card Type"),
+        children: <Widget>[
+          SimpleDialogOption(
+            onPressed: () {
+              Navigator.pop(context, CardChoices.STICKY);
+            },
+            child: const Text("Sticky"),
+          ),
+          SimpleDialogOption(
+            onPressed: () {
+              Navigator.pop(context, CardChoices.BULLET);
+            },
+            child: const Text("Bullet"),
+          ),
+          SimpleDialogOption(
+            onPressed: () {
+              Navigator.pop(context, CardChoices.CHECKBOX);
+            },
+            child: const Text("Checkbox"),
+          ),
+        ],
+      ),
+    )) {
+      case CardChoices.STICKY:
+        print("Card Type - Sticky - was selected.");
+        break;
+      case CardChoices.BULLET:
+        print("Card Type - Bullet - was selected.");
+        break;
+      case CardChoices.CHECKBOX:
+        print("Card Type - Checkbox - was selected.");
+        break;
+    }
+  }
+
 
   List<IconButton> buildItems(String type, FirebaseUser user) {
     var list = new List<IconButton>();
@@ -196,7 +235,7 @@ class _MyHomePageState extends State<MyHomePage> {
         color: Colors.blueAccent,
         //padding: EdgeInsets.all(25.0),
         tooltip: "Tap me to create a new $type!",
-        onPressed: showDialogBox //create new item
+        onPressed: (type == "Card") ? showDialogBoxCard : showDialogBoxCalendar//create new item
         );
 
     list.add(addIcon);
@@ -205,5 +244,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void createStickyCard(){
 
+  }
+
+  int cardLengthReturn(){
+    widget._cardItems = buildItems("Card", widget.user); 
+    return widget._cardItems.length;
+  }
+
+  int calendarLengthReturn(){
+    widget._calendarItems = buildItems("Calendar", widget.user);
+    return widget._calendarItems.length;
   }
 }

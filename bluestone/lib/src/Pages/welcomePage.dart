@@ -1,4 +1,4 @@
-import 'package:bluestone/src/Pages/cards/stickyDisplay.dart';
+import 'package:bluestone/src/Pages/testingFile.dart';
 import 'package:bluestone/src/components/extras.dart';
 import 'package:bluestone/src/Pages/loginPage.dart';
 import 'package:bluestone/src/Pages/registerPage.dart';
@@ -64,6 +64,6 @@ class _WelcomePageState extends State<WelcomePage> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => StickyDisplay(), fullscreenDialog: true));
+            builder: (context) => HomePage(), fullscreenDialog: true));
   }
 }

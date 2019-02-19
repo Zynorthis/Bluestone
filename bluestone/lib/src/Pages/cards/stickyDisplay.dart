@@ -58,12 +58,18 @@ class _StickyDisplayState extends State<StickyDisplay> {
               // Padding holds child for textbox
               Container(
                 height: 80.0,
-                margin: const EdgeInsets.all(10.0),
+                margin: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.only(bottom: 40.0),
                 child: (isEditting)
                     ? 
               new TextField(
                   controller: _textBodyController,
                   enableInteractiveSelection: false,
+                  maxLines: 99,
+                  decoration: InputDecoration(
+                    hintText: "Textbox",
+                    border: OutlineInputBorder(),
+                  ),
                 )
               : new Row(children: <Widget>[
                   Text(_textBodyController.value.text, textScaleFactor: 1.5,),

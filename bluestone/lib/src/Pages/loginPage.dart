@@ -1,5 +1,6 @@
 import 'package:bluestone/src/Pages/homePage.dart';
 import 'package:bluestone/src/components/extras.dart';
+import 'package:bluestone/src/components/firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -76,6 +77,7 @@ class _SignInManagerState extends State<SignInManager> {
             ),
             RaisedButton(
               onPressed: () {
+                showLoadingIndicator();
                 signIn();
                 // final snackBar = SnackBar(content: Text("Logging in..."));
                 // Scaffold.of(context).showSnackBar(snackBar);
@@ -89,12 +91,22 @@ class _SignInManagerState extends State<SignInManager> {
     );
   }
 
+  Widget showLoadingIndicator(){
+    return new CircularProgressIndicator();
+  }
+
   Future<void> signIn() async {
     final _formState = _formKey.currentState;
     if (_formState.validate()) {
       _formState.save();
       try {
-        FirebaseUser user = await FirebaseAuth.instance
+
+        // here I capture the FirebaseUser we get back with the
+        // user attached to the CurrentLoggedInUser class. This
+        // is so anywhere else in the app when need we can easily
+        // grab the current user details from and use them. 
+
+        CurrentLoggedInUser.user = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: _email, password: _password);
         // Navigator.pop(context);
         Navigator.of(context).pop();
@@ -103,7 +115,7 @@ class _SignInManagerState extends State<SignInManager> {
             MaterialPageRoute(
                 builder: (context) => MyHomePage(
                       title: ThemeSettings.defaultTitle,
-                      user: user,
+                      user: CurrentLoggedInUser.user,
                     )));
       } catch (error) {
         print(error.message);
