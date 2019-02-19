@@ -40,8 +40,8 @@ class MenuBuilder {
         iconSize: 125.0,
         color: Colors.blueAccent,
         //padding: EdgeInsets.all(25.0),
-        tooltip: "Tap me to create a new $type!",
-        onPressed: showDialogBox  //create new item
+        tooltip: "Tap me to create a news $type!",
+        onPressed: null //create new item
         );
 
     list.add(addIcon);

@@ -14,12 +14,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 // static final FirebaseUser user = MyHomePage
+enum Choices { STICKY, BULLET, CHECKBOX }
 
 class _MyHomePageState extends State<MyHomePage> {
   // _MyHomePageState({ this.user })
   static var user;
-  var _cardItems = MenuBuilder.buildItems("Card", user);
-  var _calendarItems = MenuBuilder.buildItems("Calendar", user);
+  List<IconButton> _cardItems = buildItems("Card", user);
+  var _calendarItems = buildItems("Calendar", user);
 
   @override
   Widget build(BuildContext context) {
@@ -43,13 +44,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 var thing = new SimpleDialog(
                   title: Text("Select a User Account"),
                   children: <Widget>[
-                    FlatButton(
-                      onPressed: null,
-                      child: Row(children: <Widget>[
-                        Icon(Icons.person),
-                        Text("${widget.user.email}"),
-                      ],) 
-                    ),
+                    SimpleDialogOption(
+                        onPressed: null,
+                        child: Row(
+                          children: <Widget>[
+                            Icon(Icons.person),
+                            Text("${widget.user.email}"),
+                          ],
+                        )),
                   ],
                 );
                 assert(AlertDialog != null);
@@ -127,24 +129,77 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Future showDialogBox(BuildContext context){
-          print("Starting OnPress Action.");
-          var thing = new SimpleDialog(
-            title: Text("Select a Card Type"),
-            children: <Widget>[
-              FlatButton(
-                onPressed: null,
-                child: Text("Sticky"),
-              ),
-            ],
-          );
-          assert(AlertDialog != null);
-          print("Finishing Construction of OnPress Action");
-          return showDialog(
-              context: context,
-              barrierDismissible: true,
-              builder: (BuildContext context) {
-                return thing;
-              });
-        }
+  Future<Null> showDialogBox() async {
+    switch (await showDialog(
+      context: context,
+      barrierDismissible: true,
+      child: new SimpleDialog(
+        title: Text("Select a Card Type"),
+        children: <Widget>[
+          SimpleDialogOption(
+            onPressed: () {
+              Navigator.pop(context, Choices.STICKY);
+            },
+            child: const Text("Sticky"),
+          ),
+          SimpleDialogOption(
+            onPressed: () {
+              Navigator.pop(context, Choices.BULLET);
+            },
+            child: const Text("Bullet"),
+          ),
+          SimpleDialogOption(
+            onPressed: () {
+              Navigator.pop(context, Choices.CHECKBOX);
+            },
+            child: const Text("Checkbox"),
+          ),
+        ],
+      ),
+    )) {
+      case Choices.STICKY:
+        print("Card Type - Sticky - was selected.");
+        break;
+      case Choices.BULLET:
+        print("Card Type - Bullet - was selected.");
+        break;
+      case Choices.CHECKBOX:
+        print("Card Type - Checkbox - was selected.");
+        break;
+    }
+  }
+
+  List<IconButton> buildItems(String type, FirebaseUser user) {
+    var list = new List<IconButton>();
+    // var userId = user.uid;
+    // if (type == "Card") {
+    //   final Future<QuerySnapshot> privateResults =
+    //       fireStoreSnapshot("Cards/Private/UIDs/", "UID", userId);
+    //   // final Future<QuerySnapshot> publicResults = fireStoreSnapshot("Cards/Public/UIDs/", "UID", userId);
+    //   // FirebaseDatabase.instance.reference().child("card").reference().child("private").reference().child("UID").once().then((DataSnapshot snapshot) {
+
+    //   // });
+    //   // FirebaseDatabase.instance.reference().child("card").reference().child("public").reference().child("UID").once();
+
+    // } else if (type == "Calendar") {
+    //   // add all of the calendars save for a user here.
+    // } else {
+    //   print(
+    //       "Error: invalid type - Type being passed in was unable to be determined. (menuBuilder.dart - line 24)");
+    //   throw new Exception(
+    //       "Error: invalid type - Type being passed in was unable to be determined.");
+    // }
+
+    var addIcon = new IconButton(
+        icon: Icon(Icons.add),
+        iconSize: 125.0,
+        color: Colors.blueAccent,
+        //padding: EdgeInsets.all(25.0),
+        tooltip: "Tap me to create a new $type!",
+        onPressed: showDialogBox //create new item
+        );
+
+    list.add(addIcon);
+    return list;
+  }
 }
