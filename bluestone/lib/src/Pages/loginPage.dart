@@ -1,6 +1,6 @@
 import 'package:bluestone/src/Pages/homePage.dart';
 import 'package:bluestone/src/components/extras.dart';
-import 'package:bluestone/src/components/firestore.dart';
+import 'package:bluestone/src/components/firebaseContent.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -34,7 +34,7 @@ class _SignInManagerState extends State<SignInManager> {
                     return "Please provide an email address.";
                   } else if (!input.contains("@")) {
                     return "Please provide a valid email address.";
-                  } 
+                  }
                   // else if (input.contains(" ")) {
                   //   return input = input.trim();
                   // }
@@ -91,7 +91,7 @@ class _SignInManagerState extends State<SignInManager> {
     );
   }
 
-  Widget showLoadingIndicator(){
+  Widget showLoadingIndicator() {
     return new CircularProgressIndicator();
   }
 
@@ -100,11 +100,10 @@ class _SignInManagerState extends State<SignInManager> {
     if (_formState.validate()) {
       _formState.save();
       try {
-
         // here I capture the FirebaseUser we get back with the
         // user attached to the CurrentLoggedInUser class. This
         // is so anywhere else in the app when need we can easily
-        // grab the current user details from and use them. 
+        // grab the current user details from and use them.
 
         CurrentLoggedInUser.user = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: _email, password: _password);

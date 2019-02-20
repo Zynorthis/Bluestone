@@ -1,27 +1,27 @@
-import 'package:bluestone/src/Pages/homePage.dart';
 import 'package:bluestone/src/components/extras.dart';
+import 'package:bluestone/src/components/firebaseContent.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class StickyDisplay extends StatefulWidget {
-  const StickyDisplay({UniqueKey key});
+  const StickyDisplay({UniqueKey key, @required String textBodyContent, @required String titleContent});
 
   @override
   _StickyDisplayState createState() => new _StickyDisplayState();
 }
 
 class _StickyDisplayState extends State<StickyDisplay> {
-  static const String _cardTitle = "Testing...";
   TextEditingController _titleController = new TextEditingController();
   TextEditingController _textBodyController = new TextEditingController();
+  String textBodyContent;
+  String titleContent;
   bool isEditting = false;
-  final DocumentReference firestoreDoc = Firestore.instance.document("TestData/TestDocument");
+  //final DocumentReference firestoreDoc = Firestore.instance.document("TestData/TestDocument");
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(_cardTitle),
+          title: Text(titleContent),
         ),
         backgroundColor: ThemeSettings.themeData.backgroundColor,
         floatingActionButton: new FloatingActionButton.extended(
@@ -50,7 +50,7 @@ class _StickyDisplayState extends State<StickyDisplay> {
                       )
                     : new Row(children: <Widget>[
                         Text(
-                          _titleController.value.text,
+                          _titleController.text,
                           textScaleFactor: 1.5,
                         ),
                       ]),
@@ -72,7 +72,7 @@ class _StickyDisplayState extends State<StickyDisplay> {
                   ),
                 )
               : new Row(children: <Widget>[
-                  Text(_textBodyController.value.text, textScaleFactor: 1.5,),
+                  Text(_textBodyController.text, textScaleFactor: 1.5,),
                 ]),
               ),
             ],
@@ -92,13 +92,13 @@ class _StickyDisplayState extends State<StickyDisplay> {
       "title" : _titleController.value.text,
       "textBody" : _textBodyController.value.text,
     };
-    firestoreDoc.updateData(data).whenComplete(() {
+    FirestoreContent.firestoreDoc.updateData(data).whenComplete(() {
       print("Document Updated.");
       setState(() {});
     }).catchError((e) => print(e));
   }
   void _removeFromDb() async {
-    firestoreDoc.delete().whenComplete(() {
+    FirestoreContent.firestoreDoc.delete().whenComplete(() {
       print("Removed Document.");
       setState(() {});
     }).catchError((e) => print(e));
