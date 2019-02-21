@@ -1,24 +1,28 @@
 import 'package:bluestone/src/components/extras.dart';
 import 'package:bluestone/src/components/firebaseContent.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class StickyDisplay extends StatefulWidget {
-  const StickyDisplay({UniqueKey key, @required String textBodyContent, @required String titleContent});
+  const StickyDisplay({UniqueKey key, @required String textBodyContent, @required String titleContent, @required bool visibility});
 
   @override
-  _StickyDisplayState createState() => new _StickyDisplayState();
+  _StickyDisplayState createState() => new _StickyDisplayState ();
 }
 
 class _StickyDisplayState extends State<StickyDisplay> {
   TextEditingController _titleController = new TextEditingController();
   TextEditingController _textBodyController = new TextEditingController();
-  String textBodyContent;
-  String titleContent;
+  String textBodyContent = FirestoreContent.documentSnap.data["textBody"];
+  String titleContent = FirestoreContent.documentSnap.data["title"]; 
+  // false visabilty means private
+  bool visibility = FirestoreContent.documentSnap.data["visibilty"];
   bool isEditting = false;
-  //final DocumentReference firestoreDoc = Firestore.instance.document("TestData/TestDocument");
 
   @override
   Widget build(BuildContext context) {
+    titleContent = _titleController.text;
+    textBodyContent =_textBodyController.text;
     return Scaffold(
         appBar: AppBar(
           title: Text(titleContent),

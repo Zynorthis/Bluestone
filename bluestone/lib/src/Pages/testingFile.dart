@@ -10,7 +10,6 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
     return new Scaffold(
       appBar: new AppBar(
         title: new Text("Testing Ground"),

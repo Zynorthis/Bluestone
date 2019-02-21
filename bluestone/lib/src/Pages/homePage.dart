@@ -1,8 +1,8 @@
 import 'package:bluestone/src/Pages/cards/stickyDisplay.dart';
 import 'package:bluestone/src/Pages/welcomePage.dart';
+import 'package:bluestone/src/components/firebaseContent.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:bluestone/src/components/menuBuilder.dart';
 import 'package:bluestone/src/components/extras.dart';
 import 'package:flutter/material.dart';
 
@@ -11,8 +11,6 @@ class MyHomePage extends StatefulWidget {
 
   final FirebaseUser user;
   final String title;
-  List<IconButton> _cardItems;
-  List<IconButton> _calendarItems;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -40,38 +38,43 @@ class _MyHomePageState extends State<MyHomePage> {
               color: Colors.white,
               tooltip: "${widget.user.email} is logged in.",
               onPressed: () {
-                print("Starting OnPress Action.");
                 var thing = new SimpleDialog(
                   title: Text("Select a User Account"),
                   children: <Widget>[
                     SimpleDialogOption(
                         onPressed: () {
-                          print("User was selected.");
                           Navigator.pop(context);
                           return showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (BuildContext context){
-                              return new AlertDialog(
-                                content: new Text("Would you like to log out?"),
-                                actions: <Widget>[
-                                  new FlatButton(
-                                    child: new Text("No"),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  new FlatButton(
-                                    child: new Text("Yes"),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => WelcomePage()));
-                                    },
-                                  )
-                                ],
-                              );
-                            }
-                          );
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (BuildContext context) {
+                                return new AlertDialog(
+                                  content:
+                                      new Text("Would you like to log out?"),
+                                  actions: <Widget>[
+                                    new FlatButton(
+                                      child: new Text("No"),
+                                      onPressed: () {
+                                        print("User chose not to log out.");
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    new FlatButton(
+                                      child: new Text("Yes"),
+                                      onPressed: () {
+                                        print(
+                                            "Current user: ${widget.user.email} has logged out.");
+                                        Navigator.pop(context);
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    WelcomePage()));
+                                      },
+                                    )
+                                  ],
+                                );
+                              });
                         },
                         child: Row(
                           children: <Widget>[
@@ -82,7 +85,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   ],
                 );
                 assert(AlertDialog != null);
-                print("Finishing Construction of OnPress Action");
                 return showDialog(
                     context: context,
                     barrierDismissible: true,
@@ -118,8 +120,22 @@ class _MyHomePageState extends State<MyHomePage> {
                     itemCount: snapshot.data.length,
                     itemBuilder: (_, index) {
                       return (!snapshot.hasData)
-                          ? Center(
-                              child: Text(" No Cards avaible :( "),
+                          ? Container(
+                              margin:
+                                  EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 20.0),
+                              decoration: BoxDecoration(
+                                  color: ThemeSettings.themeData.accentColor,
+                                  shape: BoxShape.rectangle),
+                              child: IconButton(
+                                icon: Icon(Icons.add),
+                                iconSize: 125.0,
+                                color: Colors.blueAccent,
+                                tooltip: "A Bluestone Card.",
+                                onPressed: () {
+                                  print("New card button pressed.");
+                                  showDialogBoxCard();
+                                },
+                              ),
                             )
                           : Container(
                               margin:
@@ -133,7 +149,27 @@ class _MyHomePageState extends State<MyHomePage> {
                                 color: Colors.blueAccent,
                                 tooltip: "A Bluestone Card.",
                                 onPressed: () {
-                                  print("${snapshot.data[index]}");
+                                  print(
+                                      "${snapshot.data[index].data["title"]} was tapped.");
+                                  FirestoreContent.firestoreDoc = snapshot.data[index];
+                                  if (snapshot.data[index].data["type"] == "Sticky"){
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => StickyDisplay(
+                                                titleContent: snapshot
+                                                    .data[index].data["title"],
+                                                visibility: snapshot.data[index]
+                                                    .data["visibility"],
+                                                textBodyContent: snapshot
+                                                    .data[index]
+                                                    .data["textBody"],
+                                              )));
+                                  } else if (snapshot.data[index].data["type"] == "Bullet"){
+
+                                  } else if (snapshot.data[index].data["type"] == "Checkbox") {
+
+                                  }
                                 },
                               ),
                             );
@@ -155,11 +191,25 @@ class _MyHomePageState extends State<MyHomePage> {
                   return new Text(" Error: Connnection Timeout. ");
                 } else {
                   return ListView.builder(
-                    itemCount: snapshot.data.length,
+                    itemCount: snapshot.data.length + 1,
                     itemBuilder: (_, index) {
                       return (!snapshot.hasData)
-                          ? Center(
-                              child: Text(" No Calendars avaible :( "),
+                          ? Container(
+                              margin:
+                                  EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 20.0),
+                              decoration: BoxDecoration(
+                                  color: ThemeSettings.themeData.accentColor,
+                                  shape: BoxShape.rectangle),
+                              child: IconButton(
+                                icon: Icon(Icons.add),
+                                iconSize: 125.0,
+                                color: Colors.blueAccent,
+                                tooltip: "A Bluestone Calendar.",
+                                onPressed: () {
+                                  print("New calendar button pressed.");
+                                  showDialogBoxCalendar();
+                                },
+                              ),
                             )
                           : Container(
                               margin:
@@ -173,7 +223,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 color: Colors.blueAccent,
                                 tooltip: "A Bluestone Calendar.",
                                 onPressed: () {
-                                  print("${snapshot.data[index]}");
+                                  print(
+                                      "${snapshot.data[index].data["title"]} was tapped.");
                                 },
                               ),
                             );
@@ -182,54 +233,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 }
               },
             ),
-            // ListView.builder(
-            //   padding: const EdgeInsets.all(16.0),
-            //   itemCount: cardLengthReturn(),
-            //   itemBuilder: (context, i) {
-            //     if (i.isOdd) {
-            //       return Divider();
-            //     }
-            //     final index = i ~/ 2;
-            //     return Container(
-            //       decoration: BoxDecoration(
-            //           color: ThemeSettings.themeData.accentColor,
-            //           shape: BoxShape.circle),
-            //       child: IconButton(
-            //         icon: widget._cardItems[index].icon,
-            //         iconSize: widget._cardItems[index].iconSize,
-            //         color: widget._cardItems[index].color,
-            //         splashColor: widget._cardItems[index].splashColor,
-            //         padding: widget._cardItems[index].padding,
-            //         tooltip: widget._cardItems[index].tooltip,
-            //         onPressed: widget._cardItems[index].onPressed,
-            //       ),
-            //     );
-            //   },
-            // ),
-            // ListView.builder(
-            //   padding: const EdgeInsets.all(16.0),
-            //   itemCount: calendarLengthReturn(),
-            //   itemBuilder: (context, i) {
-            //     if (i.isOdd) {
-            //       return Divider();
-            //     }
-            //     final index = i ~/ 2;
-            //     return new Container(
-            //       decoration: BoxDecoration(
-            //           color: ThemeSettings.themeData.accentColor,
-            //           shape: BoxShape.rectangle),
-            //       child: IconButton(
-            //         icon: widget._calendarItems[index].icon,
-            //         iconSize: widget._calendarItems[index].iconSize,
-            //         color: widget._calendarItems[index].color,
-            //         splashColor: widget._calendarItems[index].splashColor,
-            //         padding: widget._calendarItems[index].padding,
-            //         tooltip: widget._calendarItems[index].tooltip,
-            //         onPressed: widget._calendarItems[index].onPressed,
-            //       ),
-            //     );
-            //   },
-            // ),
           ],
         ),
       ),
@@ -266,14 +269,28 @@ class _MyHomePageState extends State<MyHomePage> {
     )) {
       case CardChoices.STICKY:
         print("Card Type - Sticky - was selected.");
+        String title = "New Card";
+        String textBody = "Enter text here!";
+        bool visibility =
+            false; // false visabilty means private, new cards are set to private by default
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => StickyDisplay()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => StickyDisplay(
+                      titleContent: title,
+                      textBodyContent: textBody,
+                      visibility: visibility,
+                    )));
         break;
       case CardChoices.BULLET:
         print("Card Type - Bullet - was selected.");
+        // Navigator.push(
+        //     context, MaterialPageRoute(builder: (context) => StickyDisplay()));
         break;
       case CardChoices.CHECKBOX:
         print("Card Type - Checkbox - was selected.");
+        // Navigator.push(
+        //     context, MaterialPageRoute(builder: (context) => StickyDisplay()));
         break;
     }
   }
@@ -319,62 +336,60 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future getCardPost(FirebaseUser user) async {
-    var collectionOfPrivateCards = await Firestore.instance
-        .collection("Cards/Private/UIDs/${user.uid}/CardIDs")
+    var collectionOfCards = await Firestore.instance
+        .collection("Cards/Personal/UIDs/${user.uid}/CardIDs")
         .getDocuments();
-    return collectionOfPrivateCards.documents;
+    return collectionOfCards.documents;
   }
 
   Future getCalendarPost(FirebaseUser user) async {
-    var collectionOfPrivateCards = await Firestore.instance
-        .collection("Cards/Private/UIDs/${user.uid}/CardIDs")
+    var collectionOfCalendars = await Firestore.instance
+        .collection("Cards/Personal/UIDs/${user.uid}/CardIDs")
         .getDocuments();
-    return collectionOfPrivateCards.documents;
+    return collectionOfCalendars.documents;
   }
 
-  List<IconButton> buildItems(String type, FirebaseUser user) {
-    var list = new List<IconButton>();
+  // List<IconButton> buildItems(String type, FirebaseUser user) {
+  //   var list = new List<IconButton>();
 
-    var userId = user.uid;
-    if (type == "Card") {
-      var collectionOfPrivateCards = Firestore.instance
-          .collection("Cards/Private/UIDs/${user.uid}/CardIDs")
-          .getDocuments();
-      var collectionOfPublicCards = Firestore.instance
-          .collection("Cards/Public/UIDs/${user.uid}/CardIDs")
-          .getDocuments();
-    } else if (type == "Calendar") {
-      // add all of the calendars save for a user here.
-    } else {
-      print(
-          "Error: invalid type - Type being passed in the buildItems paremeters was unable to be determined.");
-      throw new Exception(
-          "Error: invalid type - Type being passed in the buildItems paremeters was unable to be determined.");
-    }
+  //   var userId = user.uid;
+  //   if (type == "Card") {
+  //     var collectionOfPrivateCards = Firestore.instance
+  //         .collection("Cards/Private/UIDs/${user.uid}/CardIDs")
+  //         .getDocuments();
+  //     var collectionOfPublicCards = Firestore.instance
+  //         .collection("Cards/Public/UIDs/${user.uid}/CardIDs")
+  //         .getDocuments();
+  //   } else if (type == "Calendar") {
+  //     // add all of the calendars save for a user here.
+  //   } else {
+  //     print(
+  //         "Error: invalid type - Type being passed in the buildItems paremeters was unable to be determined.");
+  //     throw new Exception(
+  //         "Error: invalid type - Type being passed in the buildItems paremeters was unable to be determined.");
+  //   }
 
-    var addIcon = new IconButton(
-        icon: Icon(Icons.add),
-        iconSize: 125.0,
-        color: Colors.blueAccent,
-        //padding: EdgeInsets.all(25.0),
-        tooltip: "Tap me to create a new $type!",
-        onPressed: (type == "Card") // create a new item on tap
-            ? showDialogBoxCard
-            : showDialogBoxCalendar);
+  //   var addIcon = new IconButton(
+  //       icon: Icon(Icons.add),
+  //       iconSize: 125.0,
+  //       color: Colors.blueAccent,
+  //       //padding: EdgeInsets.all(25.0),
+  //       tooltip: "Tap me to create a new $type!",
+  //       onPressed: (type == "Card") // create a new item on tap
+  //           ? showDialogBoxCard
+  //           : showDialogBoxCalendar);
 
-    list.add(addIcon);
-    return list;
-  }
+  //   list.add(addIcon);
+  //   return list;
+  // }
 
-  void createStickyCard() {}
+  // int cardLengthReturn() {
+  //   widget._cardItems = buildItems("Card", widget.user);
+  //   return widget._cardItems.length;
+  // }
 
-  int cardLengthReturn() {
-    widget._cardItems = buildItems("Card", widget.user);
-    return widget._cardItems.length;
-  }
-
-  int calendarLengthReturn() {
-    widget._calendarItems = buildItems("Calendar", widget.user);
-    return widget._calendarItems.length;
-  }
+  // int calendarLengthReturn() {
+  //   widget._calendarItems = buildItems("Calendar", widget.user);
+  //   return widget._calendarItems.length;
+  // }
 }
