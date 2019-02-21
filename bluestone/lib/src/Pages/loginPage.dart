@@ -100,6 +100,7 @@ class _SignInManagerState extends State<SignInManager> {
     if (_formState.validate()) {
       _formState.save();
       try {
+        
         // here I capture the FirebaseUser we get back with the
         // user attached to the CurrentLoggedInUser class. This
         // is so anywhere else in the app when need we can easily

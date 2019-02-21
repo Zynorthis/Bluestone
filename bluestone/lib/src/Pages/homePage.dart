@@ -151,19 +151,18 @@ class _MyHomePageState extends State<MyHomePage> {
                                 onPressed: () {
                                   print(
                                       "${snapshot.data[index].data["title"]} was tapped.");
-                                  FirestoreContent.firestoreDoc = snapshot.data[index];
+                                  FirestoreContent.documentSnap = snapshot.data[index];
                                   if (snapshot.data[index].data["type"] == "Sticky"){
+                                    var title = snapshot.data[index].data["title"];
+                                    var visibility = snapshot.data[index].data["visibility"];
+                                    var textBody = snapshot.data[index].data["textBody"];
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => StickyDisplay(
-                                                titleContent: snapshot
-                                                    .data[index].data["title"],
-                                                visibility: snapshot.data[index]
-                                                    .data["visibility"],
-                                                textBodyContent: snapshot
-                                                    .data[index]
-                                                    .data["textBody"],
+                                                titleContent: title,
+                                                visibility: visibility,
+                                                textBodyContent: textBody,
                                               )));
                                   } else if (snapshot.data[index].data["type"] == "Bullet"){
 
@@ -348,48 +347,4 @@ class _MyHomePageState extends State<MyHomePage> {
         .getDocuments();
     return collectionOfCalendars.documents;
   }
-
-  // List<IconButton> buildItems(String type, FirebaseUser user) {
-  //   var list = new List<IconButton>();
-
-  //   var userId = user.uid;
-  //   if (type == "Card") {
-  //     var collectionOfPrivateCards = Firestore.instance
-  //         .collection("Cards/Private/UIDs/${user.uid}/CardIDs")
-  //         .getDocuments();
-  //     var collectionOfPublicCards = Firestore.instance
-  //         .collection("Cards/Public/UIDs/${user.uid}/CardIDs")
-  //         .getDocuments();
-  //   } else if (type == "Calendar") {
-  //     // add all of the calendars save for a user here.
-  //   } else {
-  //     print(
-  //         "Error: invalid type - Type being passed in the buildItems paremeters was unable to be determined.");
-  //     throw new Exception(
-  //         "Error: invalid type - Type being passed in the buildItems paremeters was unable to be determined.");
-  //   }
-
-  //   var addIcon = new IconButton(
-  //       icon: Icon(Icons.add),
-  //       iconSize: 125.0,
-  //       color: Colors.blueAccent,
-  //       //padding: EdgeInsets.all(25.0),
-  //       tooltip: "Tap me to create a new $type!",
-  //       onPressed: (type == "Card") // create a new item on tap
-  //           ? showDialogBoxCard
-  //           : showDialogBoxCalendar);
-
-  //   list.add(addIcon);
-  //   return list;
-  // }
-
-  // int cardLengthReturn() {
-  //   widget._cardItems = buildItems("Card", widget.user);
-  //   return widget._cardItems.length;
-  // }
-
-  // int calendarLengthReturn() {
-  //   widget._calendarItems = buildItems("Calendar", widget.user);
-  //   return widget._calendarItems.length;
-  // }
 }
