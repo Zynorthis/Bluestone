@@ -110,8 +110,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return new SizedBox(
                     child: CircularProgressIndicator(),
-                    height: 50.0,
-                    width: 50.0,
+                    height: 0.5,
+                    width: 0.5,
                   );
                 } else if (snapshot.connectionState == ConnectionState.none) {
                   return new Text(" Error: Connnection Timeout. ");

@@ -7,13 +7,10 @@ import 'package:bluestone/src/Pages/welcomePage.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-
-  final appName = "Bluestone";
   
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: appName,
       theme: ThemeData(
         primarySwatch: ThemeSettings.themeData.primaryColor,
       ),
