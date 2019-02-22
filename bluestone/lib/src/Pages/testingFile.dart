@@ -34,7 +34,7 @@ class HomePageState extends State<HomePage> {
           date: new DateTime(2019, 2, 25),
           title: 'Event 1',
           icon: _eventIcon,
-          description: "Example Description",
+          description: "Extended Example Description, I stretch across two line! Look at me go! I just keep on going and going and going and going...",
         ),
         new Event(
           date: new DateTime(2019, 2, 25),
@@ -302,19 +302,20 @@ class HomePageState extends State<HomePage> {
                           children: <Widget>[
                             Flexible(
                               child: ListView.builder(
-                                itemCount: _calendarCarousel
-                                    .markedDatesMap.events.length,
+                                itemCount: LocalData.events.length,
                                 itemBuilder: (_, index) {
                                   return Row(
                                     children: <Widget>[
-                                      ListTile(
-                                        title:
-                                            Text(LocalData.events[index].title),
-                                        subtitle: Text(LocalData
-                                            .events[index].description),
-                                        onTap: null,
-                                        onLongPress: null,
-                                        isThreeLine: true,
+                                      Flexible(
+                                        child: ListTile(
+                                          title: Text(
+                                              LocalData.events[index].title),
+                                          subtitle: Text(LocalData
+                                              .events[index].description),
+                                          onTap: null,
+                                          onLongPress: null,
+                                          isThreeLine: true,
+                                        ),
                                       ),
                                     ],
                                   );
@@ -349,10 +350,12 @@ class HomePageState extends State<HomePage> {
   /// calendar being looked at. The method takes in a List of
   /// [Event]s
   void listEventDetails(List<Event> events) {
-    LocalData.events.clear();
+    if (LocalData.events.isNotEmpty) {
+      LocalData.events.clear();
+    }
     events.forEach((event) {
       if (event.date == _currentDate2) {
-        LocalData.events.add(event);
+        LocalData.setEvents(event);
       }
     });
   }
