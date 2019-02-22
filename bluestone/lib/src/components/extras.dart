@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_calendar_carousel/classes/event.dart';
 
 /// This is a custom class designed to hold [ThemeData] and
 /// [TextTheme] data. 
@@ -45,4 +46,10 @@ class ThemeSettings {
   );
 
   static final String defaultTitle = 'Bluestone [Local dev build]';
+}
+
+class LocalData {
+
+  /// Hold data for a list of given [Event]s
+  static List<Event> events;
 }

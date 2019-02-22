@@ -1,3 +1,4 @@
+import 'package:bluestone/src/components/extras.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
     show CalendarCarousel;
@@ -48,7 +49,7 @@ class HomePageState extends State<HomePage> {
     },
   );
 
-  CalendarCarousel _calendarCarouselNoHeader;
+  CalendarCarousel _calendarCarousel;
 
   @override
   void initState() {
@@ -91,8 +92,7 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-    _calendarCarouselNoHeader = CalendarCarousel<Event>(
+    _calendarCarousel = CalendarCarousel<Event>(
       todayBorderColor: Colors.lightGreen,
       onDayPressed: (DateTime date, List<Event> events) {
         this.setState(() => _currentDate2 = date);
@@ -169,15 +169,15 @@ class HomePageState extends State<HomePage> {
                               changePrevMonth(31);
                               break;
                             case 3:
-                              int monthCapture =_currentDate2.month;
+                              int monthCapture = _currentDate2.month;
                               if (_currentDate2.year.remainder(4) == 0) {
                                 changePrevMonth(28);
-                                if (monthCapture ==_currentDate2.month){
+                                if (monthCapture == _currentDate2.month) {
                                   changePrevMonth(2);
                                 }
                               } else {
                                 changePrevMonth(27);
-                                if (monthCapture ==_currentDate2.month){
+                                if (monthCapture == _currentDate2.month) {
                                   changePrevMonth(2);
                                 }
                               }
@@ -210,7 +210,8 @@ class HomePageState extends State<HomePage> {
                               changePrevMonth(30);
                               break;
                             default:
-                              print("Error Changing Date to Previous Month: could not find current month.");
+                              print(
+                                  "Error Changing Date to Previous Month: could not find current month.");
                           }
                         });
                       },
@@ -224,15 +225,15 @@ class HomePageState extends State<HomePage> {
                               changeNextMonth(31);
                               break;
                             case 2:
-                              int monthCapture =_currentDate2.month;
+                              int monthCapture = _currentDate2.month;
                               if (_currentDate2.year.remainder(4) == 0) {
                                 changeNextMonth(28);
-                                if (monthCapture ==_currentDate2.month){
+                                if (monthCapture == _currentDate2.month) {
                                   changeNextMonth(2);
                                 }
                               } else {
                                 changeNextMonth(27);
-                                if (monthCapture ==_currentDate2.month){
+                                if (monthCapture == _currentDate2.month) {
                                   changeNextMonth(2);
                                 }
                               }
@@ -268,7 +269,8 @@ class HomePageState extends State<HomePage> {
                               changeNextMonth(31);
                               break;
                             default:
-                              print("Error Changing Date to Previous Month: could not find current month.");
+                              print(
+                                  "Error Changing Date to Previous Month: could not find current month.");
                           }
                         });
                       },
@@ -278,7 +280,7 @@ class HomePageState extends State<HomePage> {
               ),
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 16.0),
-                child: _calendarCarouselNoHeader,
+                child: _calendarCarousel,
               ),
               Divider(),
               Container(
@@ -292,10 +294,13 @@ class HomePageState extends State<HomePage> {
                         ),
                       )
                     : Container(
-                        child: Column(
-                          children: <Widget>[],
-                        ),
-                      ),
+                        child: ListView.builder(
+                        itemCount:
+                            _calendarCarousel.markedDatesMap.events.length,
+                        itemBuilder: (_, index) {
+                          
+                        },
+                      )),
               ),
             ],
           ),
@@ -305,7 +310,14 @@ class HomePageState extends State<HomePage> {
   /// This method displays all of the event details below the given
   /// calendar being looked at. The method takes in a List of
   /// [Event]s
-  void listEventDetails(List<Event> events) {}
+  Widget listEventDetails(List<Event> events) {
+    events.forEach((event) {
+      if (event.date == _currentDate2) {
+        LocalData.events.add(event);
+      }
+    });
+    displayingEvents = !displayingEvents;
+  }
 
   void changePrevMonth(int days) {
     _currentDate2 = _currentDate2.subtract(Duration(days: days));
