@@ -34,16 +34,19 @@ class HomePageState extends State<HomePage> {
           date: new DateTime(2019, 2, 25),
           title: 'Event 1',
           icon: _eventIcon,
+          description: "Example Description",
         ),
         new Event(
           date: new DateTime(2019, 2, 25),
           title: 'Event 2',
           icon: _eventIcon,
+          description: "Example Description",
         ),
         new Event(
           date: new DateTime(2019, 2, 25),
           title: 'Event 3',
           icon: _eventIcon,
+          description: "Example Description",
         ),
       ],
     },
@@ -96,8 +99,16 @@ class HomePageState extends State<HomePage> {
       todayBorderColor: Colors.lightGreen,
       onDayPressed: (DateTime date, List<Event> events) {
         this.setState(() => _currentDate2 = date);
-        events.forEach((event) => print(event.title));
-        listEventDetails(events);
+        if (events.length != 0) {
+          events.forEach((event) => print(event.title));
+          displayingEvents = true;
+          listEventDetails(events);
+        } else {
+          displayingEvents = false;
+        }
+        displayingEvents
+            ? print("Display Events: True")
+            : print("Display Events: False");
       },
       weekendTextStyle: TextStyle(
         color: Colors.red,
@@ -284,23 +295,50 @@ class HomePageState extends State<HomePage> {
               ),
               Divider(),
               Container(
+                height: 300.0,
                 child: (displayingEvents)
                     ? Container(
                         child: Column(
                           children: <Widget>[
-                            Text(""),
-                            Text(" No Events Selected. "),
+                            Flexible(
+                              child: ListView.builder(
+                                itemCount: _calendarCarousel
+                                    .markedDatesMap.events.length,
+                                itemBuilder: (_, index) {
+                                  return Row(
+                                    children: <Widget>[
+                                      ListTile(
+                                        title:
+                                            Text(LocalData.events[index].title),
+                                        subtitle: Text(LocalData
+                                            .events[index].description),
+                                        onTap: null,
+                                        onLongPress: null,
+                                        isThreeLine: true,
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            )
                           ],
                         ),
                       )
                     : Container(
-                        child: ListView.builder(
-                        itemCount:
-                            _calendarCarousel.markedDatesMap.events.length,
-                        itemBuilder: (_, index) {
-                          
-                        },
-                      )),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Text(""),
+                            Text(
+                              " No Events Selected. ",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 24.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
               ),
             ],
           ),
@@ -310,13 +348,13 @@ class HomePageState extends State<HomePage> {
   /// This method displays all of the event details below the given
   /// calendar being looked at. The method takes in a List of
   /// [Event]s
-  Widget listEventDetails(List<Event> events) {
+  void listEventDetails(List<Event> events) {
+    LocalData.events.clear();
     events.forEach((event) {
       if (event.date == _currentDate2) {
         LocalData.events.add(event);
       }
     });
-    displayingEvents = !displayingEvents;
   }
 
   void changePrevMonth(int days) {
