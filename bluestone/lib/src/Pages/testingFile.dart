@@ -312,9 +312,13 @@ class HomePageState extends State<HomePage> {
                                               LocalData.events[index].title),
                                           subtitle: Text(LocalData
                                               .events[index].description),
-                                          onTap: null,
-                                          onLongPress: null,
-                                          isThreeLine: true,
+                                          onTap: () {
+                                            print("Event ${LocalData.events[index].title} was Tapped.");
+                                          },
+                                          onLongPress: () {
+                                            print("Event ${LocalData.events[index].title} was Long Tapped.");
+                                          },
+                                          isThreeLine: false,
                                         ),
                                       ),
                                     ],

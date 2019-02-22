@@ -53,6 +53,8 @@ class LocalData {
   /// Hold data for a list of given [Event]s
   static final List<Event> events = new List<Event>();
 
+  static final Event currentEvent = new Event();
+
   static void setEvents(Event event) {
     events.add(event);
   }
