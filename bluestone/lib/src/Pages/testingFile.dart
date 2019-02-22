@@ -48,7 +48,7 @@ class HomePageState extends State<HomePage> {
     },
   );
 
-  CalendarCarousel _calendarCarousel, _calendarCarouselNoHeader;
+  CalendarCarousel _calendarCarouselNoHeader;
 
   @override
   void initState() {
@@ -91,41 +91,7 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    /// Example with custom icon
-    _calendarCarousel = CalendarCarousel<Event>(
-      onDayPressed: (DateTime date, List<Event> events) {
-        this.setState(() => _currentDate = date);
-        events.forEach((event) => print(event.title));
-        listEventDetails(events);
-      },
-      weekendTextStyle: TextStyle(
-        color: Colors.red,
-      ),
-      thisMonthDayBorderColor: Colors.grey,
-//          weekDays: null, /// for pass null when you do not want to render weekDays
-//          headerText: Container( /// Example for rendering custom header
-//            child: Text('Custom Header'),
-//          ),
-//          markedDates: _markedDate,
-      weekFormat: true,
-      markedDatesMap: _markedDateMap,
-      height: 420.0,
-      selectedDateTime: _currentDate,
-//          daysHaveCircularBorder: false, /// null for not rendering any border, true for circular border, false for rectangular border
-      customGridViewPhysics: NeverScrollableScrollPhysics(),
-      markedDateShowIcon: true,
-      markedDateIconMaxShown: 2,
-      todayTextStyle: TextStyle(
-        color: Colors.blue,
-      ),
-      todayBorderColor: Colors.lightGreen,
-      markedDateMoreShowTotal:
-          true, // null for not showing hidden events indicator
-//          markedDateIconMargin: 9,
-//          markedDateIconOffset: 3,
-    );
 
-    /// Example Calendar Carousel without header and custom prev & next button
     _calendarCarouselNoHeader = CalendarCarousel<Event>(
       todayBorderColor: Colors.lightGreen,
       onDayPressed: (DateTime date, List<Event> events) {
@@ -139,7 +105,7 @@ class HomePageState extends State<HomePage> {
       thisMonthDayBorderColor: Colors.grey,
       weekFormat: false,
       markedDatesMap: _markedDateMap,
-      height: 320.0,
+      height: 350.0,
       selectedDateTime: _currentDate2,
       customGridViewPhysics: NeverScrollableScrollPhysics(),
       markedDateShowIcon: true,
@@ -157,8 +123,8 @@ class HomePageState extends State<HomePage> {
       selectedDayTextStyle: TextStyle(
         color: Colors.lightGreenAccent,
       ),
-      minSelectedDate: _currentDate,
-      maxSelectedDate: _currentDate.add(Duration(days: 60)),
+      minSelectedDate: _currentDate.subtract(Duration(days: 365)),
+      maxSelectedDate: _currentDate.add(Duration(days: 365)),
 //      inactiveDateColor: Colors.black12,
       onCalendarChanged: (DateTime date) {
         this.setState(() => _currentMonth = DateFormat.yMMM().format(date));
@@ -174,13 +140,6 @@ class HomePageState extends State<HomePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              //custom icon
-              // Container(
-              //   margin: EdgeInsets.symmetric(horizontal: 16.0),
-              //   child: _calendarCarousel,
-              // ), // This trailing comma makes auto-formatting nicer for build methods.
-
-              //custom icon without header
               Container(
                 margin: EdgeInsets.only(
                   top: 30.0,
@@ -202,10 +161,57 @@ class HomePageState extends State<HomePage> {
                       child: Text('PREV'),
                       onPressed: () {
                         setState(() {
-                          _currentDate2 =
-                              _currentDate2.subtract(Duration(days: 30));
-                          _currentMonth =
-                              DateFormat.yMMM().format(_currentDate2);
+                          switch (_currentDate2.month) {
+                            case 1:
+                              changePrevMonth(31);
+                              break;
+                            case 2:
+                              changePrevMonth(31);
+                              break;
+                            case 3:
+                              int monthCapture =_currentDate2.month;
+                              if (_currentDate2.year.remainder(4) == 0) {
+                                changePrevMonth(28);
+                                if (monthCapture ==_currentDate2.month){
+                                  changePrevMonth(2);
+                                }
+                              } else {
+                                changePrevMonth(27);
+                                if (monthCapture ==_currentDate2.month){
+                                  changePrevMonth(2);
+                                }
+                              }
+                              break;
+                            case 4:
+                              changePrevMonth(31);
+                              break;
+                            case 5:
+                              changePrevMonth(30);
+                              break;
+                            case 6:
+                              changePrevMonth(31);
+                              break;
+                            case 7:
+                              changePrevMonth(30);
+                              break;
+                            case 8:
+                              changePrevMonth(31);
+                              break;
+                            case 9:
+                              changePrevMonth(31);
+                              break;
+                            case 10:
+                              changePrevMonth(30);
+                              break;
+                            case 11:
+                              changePrevMonth(31);
+                              break;
+                            case 12:
+                              changePrevMonth(30);
+                              break;
+                            default:
+                              print("Error Changing Date to Previous Month: could not find current month.");
+                          }
                         });
                       },
                     ),
@@ -213,9 +219,57 @@ class HomePageState extends State<HomePage> {
                       child: Text('NEXT'),
                       onPressed: () {
                         setState(() {
-                          _currentDate2 = _currentDate2.add(Duration(days: 30));
-                          _currentMonth =
-                              DateFormat.yMMM().format(_currentDate2);
+                          switch (_currentDate2.month) {
+                            case 1:
+                              changeNextMonth(31);
+                              break;
+                            case 2:
+                              int monthCapture =_currentDate2.month;
+                              if (_currentDate2.year.remainder(4) == 0) {
+                                changeNextMonth(28);
+                                if (monthCapture ==_currentDate2.month){
+                                  changeNextMonth(2);
+                                }
+                              } else {
+                                changeNextMonth(27);
+                                if (monthCapture ==_currentDate2.month){
+                                  changeNextMonth(2);
+                                }
+                              }
+                              break;
+                            case 3:
+                              changeNextMonth(31);
+                              break;
+                            case 4:
+                              changeNextMonth(30);
+                              break;
+                            case 5:
+                              changeNextMonth(31);
+                              break;
+                            case 6:
+                              changeNextMonth(30);
+                              break;
+                            case 7:
+                              changeNextMonth(31);
+                              break;
+                            case 8:
+                              changeNextMonth(31);
+                              break;
+                            case 9:
+                              changeNextMonth(30);
+                              break;
+                            case 10:
+                              changeNextMonth(31);
+                              break;
+                            case 11:
+                              changeNextMonth(30);
+                              break;
+                            case 12:
+                              changeNextMonth(31);
+                              break;
+                            default:
+                              print("Error Changing Date to Previous Month: could not find current month.");
+                          }
                         });
                       },
                     )
@@ -252,4 +306,14 @@ class HomePageState extends State<HomePage> {
   /// calendar being looked at. The method takes in a List of
   /// [Event]s
   void listEventDetails(List<Event> events) {}
+
+  void changePrevMonth(int days) {
+    _currentDate2 = _currentDate2.subtract(Duration(days: days));
+    _currentMonth = DateFormat.yMMM().format(_currentDate2);
+  }
+
+  void changeNextMonth(int days) {
+    _currentDate2 = _currentDate2.add(Duration(days: days));
+    _currentMonth = DateFormat.yMMM().format(_currentDate2);
+  }
 }
