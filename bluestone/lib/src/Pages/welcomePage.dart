@@ -1,3 +1,4 @@
+import 'package:bluestone/src/Pages/calendars/eventDetails.dart';
 import 'package:bluestone/src/Pages/testingFile.dart';
 import 'package:bluestone/src/components/extras.dart';
 import 'package:bluestone/src/Pages/loginPage.dart';
@@ -37,7 +38,13 @@ class _WelcomePageState extends State<WelcomePage> {
             RaisedButton(
               padding: EdgeInsets.fromLTRB(50.0, 10.0, 50.0, 10.0),
               onPressed: navigateToTestingPage,
-              child: Text("Current Test", textScaleFactor: 2.0),
+              child: Text("Testing [Calendar]", textScaleFactor: 2.0),
+              color: ThemeSettings.themeData.accentColor,
+            ),
+            RaisedButton(
+              padding: EdgeInsets.fromLTRB(50.0, 10.0, 50.0, 10.0),
+              onPressed: navigateToTestingPage2,
+              child: Text("Testing [Events]", textScaleFactor: 2.0),
               color: ThemeSettings.themeData.accentColor,
             ),
           ],
@@ -65,5 +72,12 @@ class _WelcomePageState extends State<WelcomePage> {
         context,
         MaterialPageRoute(
             builder: (context) => HomePage(), fullscreenDialog: true));
+  }
+
+  void navigateToTestingPage2() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => EventDetailsPage(), fullscreenDialog: true));
   }
 }
