@@ -19,9 +19,8 @@ class _StickyDisplayState extends State<StickyDisplay> {
   TextEditingController _textBodyController = new TextEditingController();
   String textBodyContent = FirestoreContent.documentSnap.data["textBody"];
   String titleContent = FirestoreContent.documentSnap.data["title"];
-  // false visabilty means private
   bool visibility = FirestoreContent.documentSnap.data["visibilty"];
-  bool isEditting = false;
+  bool _isEditing = false;
 
   @override
   Widget build(BuildContext context) {
@@ -33,18 +32,18 @@ class _StickyDisplayState extends State<StickyDisplay> {
         ),
         backgroundColor: ThemeSettings.themeData.backgroundColor,
         floatingActionButton: new FloatingActionButton.extended(
-            icon: (isEditting) ? new Icon(Icons.save) : new Icon(Icons.edit),
+            icon: (_isEditing) ? new Icon(Icons.save) : new Icon(Icons.edit),
             onPressed: () {
               setState(() {
-                isEditting = !isEditting;
-                if (isEditting == false) {
+                _isEditing = !_isEditing;
+                if (_isEditing == false) {
                   _saveEditsToDb();
                   titleContent =_titleController.text;
                   textBodyContent =_textBodyController.text;
                 }
               });
             },
-            label: (isEditting) ? Text("Save") : Text("Edit")),
+            label: (_isEditing) ? Text("Save") : Text("Edit")),
         body: Center(
           child: Column(
             children: <Widget>[
@@ -52,7 +51,7 @@ class _StickyDisplayState extends State<StickyDisplay> {
               Container(
                 height: 20.0,
                 margin: const EdgeInsets.all(20.0),
-                child: (isEditting)
+                child: (_isEditing)
                     ? new TextFormField(
                         controller: _titleController,
                         enableInteractiveSelection: true,
@@ -70,7 +69,7 @@ class _StickyDisplayState extends State<StickyDisplay> {
                 height: 80.0,
                 margin: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 0.0),
                 padding: EdgeInsets.only(bottom: 0.0),
-                child: (isEditting)
+                child: (_isEditing)
                     ? new TextField(
                         controller: _textBodyController,
                         enableInteractiveSelection: false,
@@ -94,8 +93,8 @@ class _StickyDisplayState extends State<StickyDisplay> {
 
   void enableEditting() {
     setState(() {
-      isEditting = !isEditting;
-      isEditting ? print("Editting Enabled") : print("Editting Disabled");
+      _isEditing = !_isEditing;
+      _isEditing ? print("Editting Enabled") : print("Editting Disabled");
     });
   }
 
