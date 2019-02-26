@@ -1,3 +1,4 @@
+import 'package:bluestone/src/Pages/calendars/eventDetails.dart';
 import 'package:bluestone/src/components/extras.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart'
@@ -12,7 +13,6 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   DateTime _currentDate = DateTime.now();
-  DateTime _currentDate2 = DateTime.now();
   String _currentMonth = '';
   bool displayingEvents = false;
 
@@ -98,7 +98,7 @@ class HomePageState extends State<HomePage> {
     _calendarCarousel = CalendarCarousel<Event>(
       todayBorderColor: Colors.lightGreen,
       onDayPressed: (DateTime date, List<Event> events) {
-        this.setState(() => _currentDate2 = date);
+        this.setState(() => _currentDate = date);
         if (events.length != 0) {
           events.forEach((event) => print(event.title));
           displayingEvents = true;
@@ -117,7 +117,7 @@ class HomePageState extends State<HomePage> {
       weekFormat: false,
       markedDatesMap: _markedDateMap,
       height: 350.0,
-      selectedDateTime: _currentDate2,
+      selectedDateTime: _currentDate,
       customGridViewPhysics: NeverScrollableScrollPhysics(),
       markedDateShowIcon: true,
       markedDateIconMaxShown: 1,
@@ -146,6 +146,12 @@ class HomePageState extends State<HomePage> {
         appBar: new AppBar(
           title: new Text("Testing Grounds"),
         ),
+        floatingActionButton: new FloatingActionButton.extended(
+          icon: Icon(Icons.add),
+          label: Text("Add Event"),
+          onPressed: () {},
+        ),
+        backgroundColor: ThemeSettings.themeData.backgroundColor,
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -172,7 +178,7 @@ class HomePageState extends State<HomePage> {
                       child: Text('PREV'),
                       onPressed: () {
                         setState(() {
-                          switch (_currentDate2.month) {
+                          switch (_currentDate.month) {
                             case 1:
                               changePrevMonth(31);
                               break;
@@ -180,15 +186,15 @@ class HomePageState extends State<HomePage> {
                               changePrevMonth(31);
                               break;
                             case 3:
-                              int monthCapture = _currentDate2.month;
-                              if (_currentDate2.year.remainder(4) == 0) {
+                              int monthCapture = _currentDate.month;
+                              if (_currentDate.year.remainder(4) == 0) {
                                 changePrevMonth(28);
-                                if (monthCapture == _currentDate2.month) {
+                                if (monthCapture == _currentDate.month) {
                                   changePrevMonth(2);
                                 }
                               } else {
                                 changePrevMonth(27);
-                                if (monthCapture == _currentDate2.month) {
+                                if (monthCapture == _currentDate.month) {
                                   changePrevMonth(2);
                                 }
                               }
@@ -231,20 +237,20 @@ class HomePageState extends State<HomePage> {
                       child: Text('NEXT'),
                       onPressed: () {
                         setState(() {
-                          switch (_currentDate2.month) {
+                          switch (_currentDate.month) {
                             case 1:
                               changeNextMonth(31);
                               break;
                             case 2:
-                              int monthCapture = _currentDate2.month;
-                              if (_currentDate2.year.remainder(4) == 0) {
+                              int monthCapture = _currentDate.month;
+                              if (_currentDate.year.remainder(4) == 0) {
                                 changeNextMonth(28);
-                                if (monthCapture == _currentDate2.month) {
+                                if (monthCapture == _currentDate.month) {
                                   changeNextMonth(2);
                                 }
                               } else {
                                 changeNextMonth(27);
-                                if (monthCapture == _currentDate2.month) {
+                                if (monthCapture == _currentDate.month) {
                                   changeNextMonth(2);
                                 }
                               }
@@ -309,14 +315,20 @@ class HomePageState extends State<HomePage> {
                                       Flexible(
                                         child: ListTile(
                                           title: Text(
-                                              LocalData.events[index].title),
+                                              LocalData.events[index].title,
+                                              style: TextStyle(fontWeight: FontWeight.bold),
+                                              ),
                                           subtitle: Text(LocalData
                                               .events[index].description),
                                           onTap: () {
                                             print("Event ${LocalData.events[index].title} was Tapped.");
+                                            LocalData.currentEvent = LocalData.events[index];
+                                            navigateToEventDetails();
                                           },
                                           onLongPress: () {
                                             print("Event ${LocalData.events[index].title} was Long Tapped.");
+                                            LocalData.currentEvent = LocalData.events[index];
+                                            navigateToEventDetails();
                                           },
                                           isThreeLine: false,
                                         ),
@@ -358,19 +370,23 @@ class HomePageState extends State<HomePage> {
       LocalData.events.clear();
     }
     events.forEach((event) {
-      if (event.date == _currentDate2) {
+      if (event.date == _currentDate) {
         LocalData.setEvents(event);
       }
     });
   }
 
   void changePrevMonth(int days) {
-    _currentDate2 = _currentDate2.subtract(Duration(days: days));
-    _currentMonth = DateFormat.yMMM().format(_currentDate2);
+    _currentDate = _currentDate.subtract(Duration(days: days));
+    _currentMonth = DateFormat.yMMM().format(_currentDate);
   }
 
   void changeNextMonth(int days) {
-    _currentDate2 = _currentDate2.add(Duration(days: days));
-    _currentMonth = DateFormat.yMMM().format(_currentDate2);
+    _currentDate = _currentDate.add(Duration(days: days));
+    _currentMonth = DateFormat.yMMM().format(_currentDate);
+  }
+
+  void navigateToEventDetails() {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsPage(), fullscreenDialog: true));
   }
 }

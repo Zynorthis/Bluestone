@@ -1,3 +1,4 @@
+import 'package:bluestone/src/components/extras.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 
@@ -19,20 +20,27 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
+    _titleController.text = LocalData.currentEvent.title;
+    _descriptionController.text = LocalData.currentEvent.description;
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Event Details Page"),
       ),
       floatingActionButton: new FloatingActionButton.extended(
-          icon: (_isEditing) ? new Icon(Icons.save) : new Icon(Icons.edit),
+          icon: (_isEditing) ? new Icon(Icons.save, color: Colors.black,) : new Icon(Icons.edit, color: Colors.black,),
+          backgroundColor: ThemeSettings.themeData.accentColor,
           onPressed: () {
             setState(() {
               _isEditing = !_isEditing;
+              LocalData.currentEvent.title = _titleController.text;
+              LocalData.currentEvent.description = _descriptionController.text;
             });
           },
-          label: (_isEditing) ? Text("Save") : Text("Edit")),
+          label: (_isEditing) ? Text("Save", style: TextStyle(color: Colors.black),) : Text("Edit", style: TextStyle(color: Colors.black),)),
+      backgroundColor: ThemeSettings.themeData.backgroundColor,
       body: Column(
-        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           Container(
             height: 20.0,
@@ -45,8 +53,9 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                   )
                 : new Row(children: <Widget>[
                     Text(
-                      _titleController.text,
+                      LocalData.currentEvent.title,
                       textScaleFactor: 1.5,
+                      style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)
                     ),
                   ]),
           ),
@@ -57,17 +66,23 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
             child: (_isEditing)
                 ? new TextField(
                     controller: _descriptionController,
-                    enableInteractiveSelection: false,
+                    enableInteractiveSelection: true,
                     maxLines: 99,
                     decoration: InputDecoration(
                       hintText: "Textbox",
                       border: OutlineInputBorder(),
                     ),
                   )
-                : new Row(children: <Widget>[
-                    Text("${_descriptionController.text}",
-                        textScaleFactor: 1.0),
-                  ]),
+                : Container(
+                  
+                    child: Text(
+                      LocalData.currentEvent.description,
+                      textAlign: TextAlign.left,
+                      textScaleFactor: 1.0,
+                      overflow: TextOverflow.clip,
+                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600)
+                    ),
+                  ),
           ),
           Container(
               margin: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0.0),
@@ -77,8 +92,9 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                 children: <Widget>[
                   Text((isSetYetStart)
                       ? "Event Start Time: $formatedHourStart:${_startTime.minute} $isAMorPMStart"
-                      : "Event Start Time: 12:00 AM"),
+                      : "Event Start Time: 12:00 AM", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
                   RaisedButton.icon(
+                    color: ThemeSettings.themeData.accentColor,
                     icon: Icon(Icons.edit),
                     label: Text("Edit"),
                     onPressed: () {
@@ -96,8 +112,9 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                 children: <Widget>[
                   Text((isSetYetEnd)
                       ? "Event End Time: $formatedHourEnd:${_endTime.minute} $isAMorPMEnd"
-                      : "Event End Time: 12:00 AM"),
+                      : "Event End Time: 12:00 AM", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
                   RaisedButton.icon(
+                    color: ThemeSettings.themeData.accentColor,
                     icon: Icon(Icons.edit),
                     label: Text("Edit"),
                     onPressed: () {
@@ -107,6 +124,7 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                   ),
                 ],
               )),
+          SizedBox(height: 24.0),
         ],
       ),
     );
@@ -117,20 +135,22 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
       context: context,
       initialTime: TimeOfDay(hour: 0, minute: 0),
     );
-    startOrEndTime ? isSetYetStart = true : isSetYetStart = true;
-    _timeFormating(_selectedTime, startOrEndTime);
-    startOrEndTime
-        ? print(
-            "Time Selected: $formatedHourStart:${_selectedTime.minute} $isAMorPMStart")
-        : print(
-            "Time Selected: $formatedHourEnd:${_selectedTime.minute} $isAMorPMEnd");
-    setState(() {
-      if (startOrEndTime) {
-        _startTime = _selectedTime;
-      } else {
-        _endTime = _selectedTime;
-      }
-    });
+    startOrEndTime ? isSetYetStart = true : isSetYetEnd = true;
+    if (_selectedTime != null) {
+      _timeFormating(_selectedTime, startOrEndTime);
+      startOrEndTime
+          ? print(
+              "Time Selected: $formatedHourStart:${_selectedTime.minute} $isAMorPMStart")
+          : print(
+              "Time Selected: $formatedHourEnd:${_selectedTime.minute} $isAMorPMEnd");
+      setState(() {
+        if (startOrEndTime) {
+          _startTime = _selectedTime;
+        } else {
+          _endTime = _selectedTime;
+        }
+      });
+    }
   }
 
   void _timeFormating(TimeOfDay _time, bool startOrEndTime) {
@@ -152,12 +172,12 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
     } else {
       if (_time.hour > 12) {
         formatedHourEnd = _time.hour - 12;
-        isAMorPMStart = "PM";
+        isAMorPMEnd = "PM";
       } else {
         formatedHourEnd = _time.hour;
-        isAMorPMStart = "AM";
+        isAMorPMEnd = "AM";
       }
     }
-    print("Formating Complete");
+    print("Formatting Complete");
   }
 }

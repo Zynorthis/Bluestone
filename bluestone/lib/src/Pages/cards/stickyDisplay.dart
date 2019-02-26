@@ -72,19 +72,20 @@ class _StickyDisplayState extends State<StickyDisplay> {
                 child: (_isEditing)
                     ? new TextField(
                         controller: _textBodyController,
-                        enableInteractiveSelection: false,
+                        enableInteractiveSelection: true,
                         maxLines: 99,
                         decoration: InputDecoration(
                           hintText: "Textbox",
                           border: OutlineInputBorder(),
                         ),
                       )
-                    : new Row(children: <Widget>[
-                        Text(
-                          "${_textBodyController.text}",
-                          textScaleFactor: 1.0
+                    : new Container(
+                      child: Text(
+                          _textBodyController.text,
+                          textScaleFactor: 1.0,
+                          overflow: TextOverflow.clip,
                         ),
-                      ]),
+                      ),
               ),
             ],
           ),
@@ -105,7 +106,7 @@ class _StickyDisplayState extends State<StickyDisplay> {
     };
     var id = FirestoreContent.documentSnap.documentID;
     FirestoreContent.firestoreDoc = Firestore.instance.document(
-        "Cards/Personal/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/$id");
+        "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/$id");
     FirestoreContent.firestoreDoc.updateData(data).whenComplete(() {
       print("Document Updated.");
       setState(() {});
@@ -115,7 +116,7 @@ class _StickyDisplayState extends State<StickyDisplay> {
   void _removeFromDb() async {
     var id = FirestoreContent.documentSnap.documentID;
     FirestoreContent.firestoreDoc = Firestore.instance.document(
-        "Cards/Personal/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/$id");
+        "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/$id");
     FirestoreContent.firestoreDoc.delete().whenComplete(() {
       print("Removed Document.");
       setState(() {});

@@ -108,10 +108,8 @@ class _MyHomePageState extends State<MyHomePage> {
               future: getCardPost(widget.user),
               builder: (_, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return new SizedBox(
+                  return new Center(
                     child: CircularProgressIndicator(),
-                    height: 0.5,
-                    width: 0.5,
                   );
                 } else if (snapshot.connectionState == ConnectionState.none) {
                   return new Text(" Error: Connnection Timeout. ");
@@ -336,15 +334,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future getCardPost(FirebaseUser user) async {
     var collectionOfCards = await Firestore.instance
-        .collection("Cards/Personal/UIDs/${user.uid}/CardIDs")
+        .collection("Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/")
         .getDocuments();
     return collectionOfCards.documents;
   }
 
   Future getCalendarPost(FirebaseUser user) async {
     var collectionOfCalendars = await Firestore.instance
-        .collection("Cards/Personal/UIDs/${user.uid}/CardIDs")
+        .collection("Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/")
         .getDocuments();
     return collectionOfCalendars.documents;
+  }
+
+  Icon iconMapping() {
+
+    // Make switch case for icons to be saved in database
+
+    return Icon(Icons.developer_mode);
   }
 }
