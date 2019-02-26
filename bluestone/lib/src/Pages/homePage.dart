@@ -1,3 +1,4 @@
+import 'package:bluestone/src/Pages/calendars/calendarDisplay.dart';
 import 'package:bluestone/src/Pages/cards/stickyDisplay.dart';
 import 'package:bluestone/src/Pages/welcomePage.dart';
 import 'package:bluestone/src/components/firebaseContent.dart';
@@ -149,24 +150,30 @@ class _MyHomePageState extends State<MyHomePage> {
                                 onPressed: () {
                                   print(
                                       "${snapshot.data[index].data["title"]} was tapped.");
-                                  FirestoreContent.documentSnap = snapshot.data[index];
-                                  if (snapshot.data[index].data["type"] == "Sticky"){
-                                    var title = snapshot.data[index].data["title"];
-                                    var visibility = snapshot.data[index].data["visibility"];
-                                    var textBody = snapshot.data[index].data["textBody"];
+                                  FirestoreContent.documentSnap =
+                                      snapshot.data[index];
+                                  if (snapshot.data[index].data["type"] ==
+                                      "Sticky") {
+                                    var title =
+                                        snapshot.data[index].data["title"];
+                                    var visibility =
+                                        snapshot.data[index].data["visibility"];
+                                    var textBody =
+                                        snapshot.data[index].data["textBody"];
                                     Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => StickyDisplay(
-                                                titleContent: title,
-                                                visibility: visibility,
-                                                textBodyContent: textBody,
-                                              )));
-                                  } else if (snapshot.data[index].data["type"] == "Bullet"){
-
-                                  } else if (snapshot.data[index].data["type"] == "Checkbox") {
-
-                                  }
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => StickyDisplay(
+                                                  titleContent: title,
+                                                  visibility: visibility,
+                                                  textBodyContent: textBody,
+                                                )));
+                                  } else if (snapshot
+                                          .data[index].data["type"] ==
+                                      "Bullet") {
+                                  } else if (snapshot
+                                          .data[index].data["type"] ==
+                                      "Checkbox") {}
                                 },
                               ),
                             );
@@ -204,7 +211,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                 tooltip: "A Bluestone Calendar.",
                                 onPressed: () {
                                   print("New calendar button pressed.");
-                                  showDialogBoxCalendar();
                                 },
                               ),
                             )
@@ -222,6 +228,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 onPressed: () {
                                   print(
                                       "${snapshot.data[index].data["title"]} was tapped.");
+                                      navigateToCalendar(snapshot.data[index].data["title"]);
                                 },
                               ),
                             );
@@ -292,44 +299,9 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<Null> showDialogBoxCalendar() async {
-    switch (await showDialog(
-      context: context,
-      barrierDismissible: true,
-      child: new SimpleDialog(
-        title: Text("Select a Card Type"),
-        children: <Widget>[
-          SimpleDialogOption(
-            onPressed: () {
-              Navigator.pop(context, CardChoices.STICKY);
-            },
-            child: const Text("Sticky"),
-          ),
-          SimpleDialogOption(
-            onPressed: () {
-              Navigator.pop(context, CardChoices.BULLET);
-            },
-            child: const Text("Bullet"),
-          ),
-          SimpleDialogOption(
-            onPressed: () {
-              Navigator.pop(context, CardChoices.CHECKBOX);
-            },
-            child: const Text("Checkbox"),
-          ),
-        ],
-      ),
-    )) {
-      case CardChoices.STICKY:
-        print("Card Type - Sticky - was selected.");
-        break;
-      case CardChoices.BULLET:
-        print("Card Type - Bullet - was selected.");
-        break;
-      case CardChoices.CHECKBOX:
-        print("Card Type - Checkbox - was selected.");
-        break;
-    }
+  void navigateToCalendar(String title) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => CalendarDisplay(title: title,), fullscreenDialog: true));
   }
 
   Future getCardPost(FirebaseUser user) async {
@@ -341,13 +313,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future getCalendarPost(FirebaseUser user) async {
     var collectionOfCalendars = await Firestore.instance
-        .collection("Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/")
+        .collection(
+            "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/")
         .getDocuments();
     return collectionOfCalendars.documents;
   }
 
   Icon iconMapping() {
-
     // Make switch case for icons to be saved in database
 
     return Icon(Icons.developer_mode);

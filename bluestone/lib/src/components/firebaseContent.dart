@@ -13,12 +13,6 @@ class FirestoreContent {
   static DocumentReference firestoreDoc;
   static DocumentSnapshot documentSnap;
 
-  /// Sets the [DocumentReference] based on the path provided in the
-  /// paremeters 
-  static void setFbCardDocument(String personal, String id){
-    firestoreDoc = Firestore.instance.document("Cards/$personal/UIDs/$id/CardIDs");
-  }
-
   /// Sets the [DocumentReference] to the testing document
   /// in the database
   static void setFbCardDocTest(){

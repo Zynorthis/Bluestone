@@ -1,6 +1,5 @@
 import 'package:bluestone/src/components/extras.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_calendar_carousel/classes/event.dart';
 
 class EventDetailsPage extends StatefulWidget {
   @override
