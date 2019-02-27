@@ -1,5 +1,7 @@
 import 'package:bluestone/src/Pages/calendars/eventDetails.dart';
 import 'package:bluestone/src/components/extras.dart';
+import 'package:bluestone/src/components/firebaseContent.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
@@ -37,9 +39,6 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
   EventList<Event> _eventsFromDb = new EventList<Event>();
 
   Future<List<Event>> getEventsFromDb() async {
-    
-    
-
     List<Event> thing;
     return thing;
   }
@@ -72,7 +71,7 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
       customGridViewPhysics: NeverScrollableScrollPhysics(),
       markedDateShowIcon: true,
       markedDateIconMaxShown: 1,
-      markedDateMoreShowTotal: false,
+      markedDateMoreShowTotal: true,
       showHeader: false,
       markedDateIconBuilder: (event) {
         return event.icon;
@@ -93,12 +92,26 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
 
     return new Scaffold(
         appBar: AppBar(
-          title: Text("Placeholder"),
+          title: Text("Calendar"),
         ),
         floatingActionButton: new FloatingActionButton.extended(
           icon: Icon(Icons.add),
           label: Text("Add Event"),
-          onPressed: () {},
+          onPressed: () {
+            print("Begin Event Creation.");
+
+            Event event = new Event(
+                date: _currentDate,
+                title: "New Event",
+                description:
+                    "Beep boop, I am a new Event! Click the edit button to change me!",
+                icon: _eventIcon,
+                startTime: TimeOfDay(hour: 0, minute: 0),
+                endTime: TimeOfDay(hour: 0, minute: 0));
+            LocalData.currentEvent = event;
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => EventDetailsPage()));
+          },
         ),
         backgroundColor: ThemeSettings.themeData.backgroundColor,
         body: SingleChildScrollView(
@@ -345,5 +358,48 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
         context,
         MaterialPageRoute(
             builder: (context) => EventDetailsPage(), fullscreenDialog: true));
+  }
+
+  void _saveCalendarEditsToDb() async {
+    Map<String, dynamic> data = <String, dynamic>{
+      "title": title,
+      "visibility": true,
+      "scope": false,
+    };
+    var id = FirestoreContent.documentSnap.documentID;
+    FirestoreContent.calendarDoc = Firestore.instance.document(
+        "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/$id");
+    FirestoreContent.calendarDoc.updateData(data).whenComplete(() {
+      print("Document Updated.");
+      setState(() {});
+    }).catchError((e) => print(e));
+  }
+
+  void _saveEventEditsToDb() async {
+    Map<String, dynamic> data = <String, dynamic>{
+      "title": title,
+      "description": "Thing!",
+      "date": _currentDate,
+      "startTime": TimeOfDay(hour: 0, minute: 0),
+      "endTime": TimeOfDay(hour: 0, minute: 0),
+    };
+    var id = FirestoreContent.documentSnap.documentID;
+    FirestoreContent.eventDoc = Firestore.instance.document(
+        "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/${FirestoreContent.calendarDoc.documentID}/Events/$id");
+    FirestoreContent.eventDoc.updateData(data).whenComplete(() {
+      print("Document Updated.");
+      setState(() {});
+    }).catchError((e) => print(e));
+  }
+
+  void _removeFromDb() async {
+    var id = FirestoreContent.documentSnap.documentID;
+    FirestoreContent.firestoreDoc = Firestore.instance.document(
+        "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/$id");
+    FirestoreContent.firestoreDoc.delete().whenComplete(() {
+      print("Removed Document.");
+      setState(() {});
+    }).catchError((e) => print(e));
+    Navigator.pop(context);
   }
 }

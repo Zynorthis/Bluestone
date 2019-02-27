@@ -106,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
         body: TabBarView(
           children: [
             FutureBuilder(
-              future: getCardPost(widget.user),
+              future: getCardPost(),
               builder: (_, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return new Center(
@@ -116,9 +116,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   return new Text(" Error: Connnection Timeout. ");
                 } else {
                   return ListView.builder(
-                    itemCount: snapshot.data.length,
+                    itemCount: snapshot.data.length + 1,
                     itemBuilder: (_, index) {
-                      return (!snapshot.hasData)
+                      return (index == snapshot.data.length)
                           ? Container(
                               margin:
                                   EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 20.0),
@@ -183,13 +183,11 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             FutureBuilder(
-              future: getCalendarPost(widget.user),
+              future: getCalendarPost(),
               builder: (_, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return new SizedBox(
+                  return new Center(
                     child: CircularProgressIndicator(),
-                    height: 50.0,
-                    width: 50.0,
                   );
                 } else if (snapshot.connectionState == ConnectionState.none) {
                   return new Text(" Error: Connnection Timeout. ");
@@ -197,7 +195,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   return ListView.builder(
                     itemCount: snapshot.data.length + 1,
                     itemBuilder: (_, index) {
-                      return (!snapshot.hasData)
+                      return (index == snapshot.data.length)
                           ? Container(
                               margin:
                                   EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 20.0),
@@ -228,7 +226,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 onPressed: () {
                                   print(
                                       "${snapshot.data[index].data["title"]} was tapped.");
-                                      navigateToCalendar(snapshot.data[index].data["title"]);
+                                  navigateToCalendar(
+                                      snapshot.data[index].data["title"]);
                                 },
                               ),
                             );
@@ -301,17 +300,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void navigateToCalendar(String title) {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => CalendarDisplay(title: title,), fullscreenDialog: true));
+        context,
+        MaterialPageRoute(
+            builder: (context) => CalendarDisplay(
+                  title: title,
+                ),
+            fullscreenDialog: true));
   }
 
-  Future getCardPost(FirebaseUser user) async {
+  Future getCardPost() async {
     var collectionOfCards = await Firestore.instance
         .collection("Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/")
         .getDocuments();
     return collectionOfCards.documents;
   }
 
-  Future getCalendarPost(FirebaseUser user) async {
+  Future getCalendarPost() async {
     var collectionOfCalendars = await Firestore.instance
         .collection(
             "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/")

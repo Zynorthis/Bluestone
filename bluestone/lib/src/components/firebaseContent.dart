@@ -11,6 +11,9 @@ class CurrentLoggedInUser {
 /// and a [DocumentSnapshot]
 class FirestoreContent {
   static DocumentReference firestoreDoc;
+  static DocumentReference cardDoc;
+  static DocumentReference calendarDoc;
+  static DocumentReference eventDoc;
   static DocumentSnapshot documentSnap;
 
   /// Sets the [DocumentReference] to the testing document

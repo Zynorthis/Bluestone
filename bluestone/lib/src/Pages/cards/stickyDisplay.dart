@@ -38,8 +38,8 @@ class _StickyDisplayState extends State<StickyDisplay> {
                 _isEditing = !_isEditing;
                 if (_isEditing == false) {
                   _saveEditsToDb();
-                  titleContent =_titleController.text;
-                  textBodyContent =_textBodyController.text;
+                  titleContent = _titleController.text;
+                  textBodyContent = _textBodyController.text;
                 }
               });
             },
@@ -80,7 +80,7 @@ class _StickyDisplayState extends State<StickyDisplay> {
                         ),
                       )
                     : new Container(
-                      child: Text(
+                        child: Text(
                           _textBodyController.text,
                           textScaleFactor: 1.0,
                           overflow: TextOverflow.clip,
@@ -95,19 +95,19 @@ class _StickyDisplayState extends State<StickyDisplay> {
   void enableEditting() {
     setState(() {
       _isEditing = !_isEditing;
-      _isEditing ? print("Editting Enabled") : print("Editting Disabled");
+      _isEditing ? print("Editing Enabled") : print("Editing Disabled");
     });
   }
 
   void _saveEditsToDb() async {
     Map<String, String> data = <String, String>{
-      "title": _titleController.value.text,
-      "textBody": _textBodyController.value.text,
+      "title": _titleController.text,
+      "textBody": _textBodyController.text,
     };
     var id = FirestoreContent.documentSnap.documentID;
-    FirestoreContent.firestoreDoc = Firestore.instance.document(
+    FirestoreContent.cardDoc = Firestore.instance.document(
         "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/$id");
-    FirestoreContent.firestoreDoc.updateData(data).whenComplete(() {
+    FirestoreContent.cardDoc.updateData(data).whenComplete(() {
       print("Document Updated.");
       setState(() {});
     }).catchError((e) => print(e));
@@ -115,13 +115,12 @@ class _StickyDisplayState extends State<StickyDisplay> {
 
   void _removeFromDb() async {
     var id = FirestoreContent.documentSnap.documentID;
-    FirestoreContent.firestoreDoc = Firestore.instance.document(
+    FirestoreContent.cardDoc = Firestore.instance.document(
         "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/$id");
-    FirestoreContent.firestoreDoc.delete().whenComplete(() {
+    FirestoreContent.cardDoc.delete().whenComplete(() {
       print("Removed Document.");
       setState(() {});
     }).catchError((e) => print(e));
     Navigator.pop(context);
-    //Navigator.push(context, MyHomePage());
   }
 }

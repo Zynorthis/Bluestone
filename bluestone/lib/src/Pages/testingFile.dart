@@ -34,7 +34,8 @@ class HomePageState extends State<HomePage> {
           date: new DateTime(2019, 2, 25),
           title: 'Event 1',
           icon: _eventIcon,
-          description: "Extended Example Description, I stretch across two line! Look at me go! I just keep on going and going and going and going...",
+          description:
+              "Extended Example Description, I stretch across two line! Look at me go! I just keep on going and going and going and going...",
         ),
         new Event(
           date: new DateTime(2019, 2, 25),
@@ -122,7 +123,7 @@ class HomePageState extends State<HomePage> {
       markedDateShowIcon: true,
       markedDateIconMaxShown: 1,
       markedDateMoreShowTotal:
-          false, // null for not showing hidden events indicator
+          true, // null for not showing hidden events indicator
       showHeader: false,
       markedDateIconBuilder: (event) {
         return event.icon;
@@ -315,19 +316,24 @@ class HomePageState extends State<HomePage> {
                                       Flexible(
                                         child: ListTile(
                                           title: Text(
-                                              LocalData.events[index].title,
-                                              style: TextStyle(fontWeight: FontWeight.bold),
-                                              ),
+                                            LocalData.events[index].title,
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                           subtitle: Text(LocalData
                                               .events[index].description),
                                           onTap: () {
-                                            print("Event ${LocalData.events[index].title} was Tapped.");
-                                            LocalData.currentEvent = LocalData.events[index];
+                                            print(
+                                                "Event ${LocalData.events[index].title} was Tapped.");
+                                            LocalData.currentEvent =
+                                                LocalData.events[index];
                                             navigateToEventDetails();
                                           },
                                           onLongPress: () {
-                                            print("Event ${LocalData.events[index].title} was Long Tapped.");
-                                            LocalData.currentEvent = LocalData.events[index];
+                                            print(
+                                                "Event ${LocalData.events[index].title} was Long Tapped.");
+                                            LocalData.currentEvent =
+                                                LocalData.events[index];
                                             navigateToEventDetails();
                                           },
                                           isThreeLine: false,
@@ -387,6 +393,9 @@ class HomePageState extends State<HomePage> {
   }
 
   void navigateToEventDetails() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => EventDetailsPage(), fullscreenDialog: true));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => EventDetailsPage(), fullscreenDialog: true));
   }
 }

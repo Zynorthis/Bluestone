@@ -27,7 +27,15 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
         title: Text("Event Details Page"),
       ),
       floatingActionButton: new FloatingActionButton.extended(
-          icon: (_isEditing) ? new Icon(Icons.save, color: Colors.black,) : new Icon(Icons.edit, color: Colors.black,),
+          icon: (_isEditing)
+              ? new Icon(
+                  Icons.save,
+                  color: Colors.black,
+                )
+              : new Icon(
+                  Icons.edit,
+                  color: Colors.black,
+                ),
           backgroundColor: ThemeSettings.themeData.accentColor,
           onPressed: () {
             setState(() {
@@ -36,7 +44,15 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
               LocalData.currentEvent.description = _descriptionController.text;
             });
           },
-          label: (_isEditing) ? Text("Save", style: TextStyle(color: Colors.black),) : Text("Edit", style: TextStyle(color: Colors.black),)),
+          label: (_isEditing)
+              ? Text(
+                  "Save",
+                  style: TextStyle(color: Colors.black),
+                )
+              : Text(
+                  "Edit",
+                  style: TextStyle(color: Colors.black),
+                )),
       backgroundColor: ThemeSettings.themeData.backgroundColor,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -51,11 +67,10 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                     maxLength: 18,
                   )
                 : new Row(children: <Widget>[
-                    Text(
-                      LocalData.currentEvent.title,
-                      textScaleFactor: 1.5,
-                      style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)
-                    ),
+                    Text(LocalData.currentEvent.title,
+                        textScaleFactor: 1.5,
+                        style: TextStyle(
+                            fontSize: 20.0, fontWeight: FontWeight.bold)),
                   ]),
           ),
           Container(
@@ -73,14 +88,12 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
                     ),
                   )
                 : Container(
-                  
-                    child: Text(
-                      LocalData.currentEvent.description,
-                      textAlign: TextAlign.left,
-                      textScaleFactor: 1.0,
-                      overflow: TextOverflow.clip,
-                      style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600)
-                    ),
+                    child: Text(LocalData.currentEvent.description,
+                        textAlign: TextAlign.left,
+                        textScaleFactor: 1.0,
+                        overflow: TextOverflow.clip,
+                        style: TextStyle(
+                            fontSize: 18.0, fontWeight: FontWeight.w600)),
                   ),
           ),
           Container(
@@ -89,9 +102,12 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Text((isSetYetStart)
-                      ? "Event Start Time: $formatedHourStart:${_startTime.minute} $isAMorPMStart"
-                      : "Event Start Time: 12:00 AM", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+                  Text(
+                      (isSetYetStart)
+                          ? "Event Start Time: $formatedHourStart:${_startTime.minute} $isAMorPMStart"
+                          : "Event Start Time: 12:00 AM",
+                      style: TextStyle(
+                          fontSize: 20.0, fontWeight: FontWeight.bold)),
                   RaisedButton.icon(
                     color: ThemeSettings.themeData.accentColor,
                     icon: Icon(Icons.edit),
@@ -109,9 +125,12 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Text((isSetYetEnd)
-                      ? "Event End Time: $formatedHourEnd:${_endTime.minute} $isAMorPMEnd"
-                      : "Event End Time: 12:00 AM", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+                  Text(
+                      (isSetYetEnd)
+                          ? "Event End Time: $formatedHourEnd:${_endTime.minute} $isAMorPMEnd"
+                          : "Event End Time: 12:00 AM",
+                      style: TextStyle(
+                          fontSize: 20.0, fontWeight: FontWeight.bold)),
                   RaisedButton.icon(
                     color: ThemeSettings.themeData.accentColor,
                     icon: Icon(Icons.edit),
@@ -145,8 +164,10 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
       setState(() {
         if (startOrEndTime) {
           _startTime = _selectedTime;
+          LocalData.currentEvent.startTime = _selectedTime;
         } else {
           _endTime = _selectedTime;
+          LocalData.currentEvent.endTime = _endTime;
         }
       });
     }
