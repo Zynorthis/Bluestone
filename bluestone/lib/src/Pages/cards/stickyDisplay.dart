@@ -17,9 +17,9 @@ class StickyDisplay extends StatefulWidget {
 class _StickyDisplayState extends State<StickyDisplay> {
   TextEditingController _titleController = new TextEditingController();
   TextEditingController _textBodyController = new TextEditingController();
-  String textBodyContent = FirestoreContent.documentSnap.data["textBody"];
-  String titleContent = FirestoreContent.documentSnap.data["title"];
-  bool visibility = FirestoreContent.documentSnap.data["visibilty"];
+  String textBodyContent = FirestoreContent.cardSnap.data["textBody"];
+  String titleContent = FirestoreContent.cardSnap.data["title"];
+  bool visibility = FirestoreContent.cardSnap.data["visibilty"];
   bool _isEditing = false;
 
   @override
@@ -46,6 +46,7 @@ class _StickyDisplayState extends State<StickyDisplay> {
             label: (_isEditing) ? Text("Save") : Text("Edit")),
         body: Center(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               // Padding holds container to hold title
               Container(
@@ -61,6 +62,7 @@ class _StickyDisplayState extends State<StickyDisplay> {
                         Text(
                           _titleController.text,
                           textScaleFactor: 1.5,
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
                         ),
                       ]),
               ),
@@ -82,8 +84,9 @@ class _StickyDisplayState extends State<StickyDisplay> {
                     : new Container(
                         child: Text(
                           _textBodyController.text,
-                          textScaleFactor: 1.0,
+                          textAlign: TextAlign.left,
                           overflow: TextOverflow.clip,
+                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18.0),
                         ),
                       ),
               ),
@@ -104,7 +107,7 @@ class _StickyDisplayState extends State<StickyDisplay> {
       "title": _titleController.text,
       "textBody": _textBodyController.text,
     };
-    var id = FirestoreContent.documentSnap.documentID;
+    var id = FirestoreContent.cardSnap.documentID;
     FirestoreContent.cardDoc = Firestore.instance.document(
         "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/$id");
     FirestoreContent.cardDoc.updateData(data).whenComplete(() {
@@ -114,7 +117,7 @@ class _StickyDisplayState extends State<StickyDisplay> {
   }
 
   void _removeFromDb() async {
-    var id = FirestoreContent.documentSnap.documentID;
+    var id = FirestoreContent.cardSnap.documentID;
     FirestoreContent.cardDoc = Firestore.instance.document(
         "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/$id");
     FirestoreContent.cardDoc.delete().whenComplete(() {

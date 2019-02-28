@@ -1,4 +1,6 @@
 import 'package:bluestone/src/components/extras.dart';
+import 'package:bluestone/src/components/firebaseContent.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class EventDetailsPage extends StatefulWidget {
@@ -24,7 +26,7 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Event Details Page"),
+        title: Text("${_titleController.text}"),
       ),
       floatingActionButton: new FloatingActionButton.extended(
           icon: (_isEditing)
@@ -42,6 +44,11 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
               _isEditing = !_isEditing;
               LocalData.currentEvent.title = _titleController.text;
               LocalData.currentEvent.description = _descriptionController.text;
+              LocalData.currentEvent.startTime = _startTime;
+              LocalData.currentEvent.endTime = _endTime;
+              if (!_isEditing) {
+                _saveEventChangesToDb();
+              }
             });
           },
           label: (_isEditing)
@@ -199,5 +206,22 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
       }
     }
     print("Formatting Complete");
+  }
+
+  _saveEventChangesToDb() async {
+    Map<String, dynamic> data = <String, dynamic>{
+      "title": _titleController.text,
+      "description": _descriptionController.text,
+      "date": LocalData.currentEvent.date,
+      "startTime": _startTime,
+      "endTime": _endTime,
+    };
+    var id = FirestoreContent.eventSnap.documentID;
+    FirestoreContent.eventDoc = Firestore.instance.document(
+        "/Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/${FirestoreContent.calendarDoc.documentID}/Events/$id");
+    FirestoreContent.eventDoc.setData(data).whenComplete(() {
+      print("Event Data Updated.");
+      setState(() {});
+    }).catchError((e) => print(e));
   }
 }

@@ -92,7 +92,7 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
 
     return new Scaffold(
         appBar: AppBar(
-          title: Text("Calendar"),
+          title: Text(FirestoreContent.calendarSnap.data["title"]),
         ),
         floatingActionButton: new FloatingActionButton.extended(
           icon: Icon(Icons.add),
@@ -109,6 +109,8 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
                 startTime: TimeOfDay(hour: 0, minute: 0),
                 endTime: TimeOfDay(hour: 0, minute: 0));
             LocalData.currentEvent = event;
+            //_eventsFromDb.add(_currentDate, event);
+            _saveEventEditsToDb(event);
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => EventDetailsPage()));
           },
@@ -366,7 +368,7 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
       "visibility": true,
       "scope": false,
     };
-    var id = FirestoreContent.documentSnap.documentID;
+    var id = FirestoreContent.calendarSnap.documentID;
     FirestoreContent.calendarDoc = Firestore.instance.document(
         "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/$id");
     FirestoreContent.calendarDoc.updateData(data).whenComplete(() {
@@ -375,15 +377,15 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
     }).catchError((e) => print(e));
   }
 
-  void _saveEventEditsToDb() async {
+  void _saveEventEditsToDb(event) async {
     Map<String, dynamic> data = <String, dynamic>{
-      "title": title,
-      "description": "Thing!",
-      "date": _currentDate,
-      "startTime": TimeOfDay(hour: 0, minute: 0),
-      "endTime": TimeOfDay(hour: 0, minute: 0),
+      "title": event.title,
+      "description": event.description,
+      "date": event.date,
+      "startTime": event.startTime,
+      "endTime": event.endTime,
     };
-    var id = FirestoreContent.documentSnap.documentID;
+    var id = FirestoreContent.calendarSnap.documentID;
     FirestoreContent.eventDoc = Firestore.instance.document(
         "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/${FirestoreContent.calendarDoc.documentID}/Events/$id");
     FirestoreContent.eventDoc.updateData(data).whenComplete(() {
@@ -393,7 +395,7 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
   }
 
   void _removeFromDb() async {
-    var id = FirestoreContent.documentSnap.documentID;
+    var id = FirestoreContent.calendarSnap.documentID;
     FirestoreContent.firestoreDoc = Firestore.instance.document(
         "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/$id");
     FirestoreContent.firestoreDoc.delete().whenComplete(() {

@@ -14,7 +14,9 @@ class FirestoreContent {
   static DocumentReference cardDoc;
   static DocumentReference calendarDoc;
   static DocumentReference eventDoc;
-  static DocumentSnapshot documentSnap;
+  static DocumentSnapshot cardSnap;
+  static DocumentSnapshot calendarSnap;
+  static DocumentSnapshot eventSnap;
 
   /// Sets the [DocumentReference] to the testing document
   /// in the database

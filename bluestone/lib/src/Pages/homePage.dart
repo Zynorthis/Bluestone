@@ -65,6 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       onPressed: () {
                                         print(
                                             "Current user: ${widget.user.email} has logged out.");
+                                        CurrentLoggedInUser.user = null;
                                         Navigator.pop(context);
                                         Navigator.pushReplacement(
                                             context,
@@ -119,62 +120,69 @@ class _MyHomePageState extends State<MyHomePage> {
                     itemCount: snapshot.data.length + 1,
                     itemBuilder: (_, index) {
                       return (index == snapshot.data.length)
-                          ? Container(
-                              margin:
-                                  EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 20.0),
-                              decoration: BoxDecoration(
-                                  color: ThemeSettings.themeData.accentColor,
-                                  shape: BoxShape.rectangle),
-                              child: IconButton(
-                                icon: Icon(Icons.add),
-                                iconSize: 125.0,
-                                color: Colors.blueAccent,
-                                tooltip: "A Bluestone Card.",
-                                onPressed: () {
-                                  print("New card button pressed.");
-                                  showDialogBoxCard();
-                                },
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(16.0),
+                              child: Container(
+                                margin:
+                                    EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 20.0),
+                                decoration: BoxDecoration(
+                                    color: ThemeSettings.themeData.accentColor,
+                                    shape: BoxShape.rectangle),
+                                child: IconButton(
+                                  icon: Icon(Icons.add),
+                                  iconSize: 125.0,
+                                  color: Colors.blueAccent,
+                                  tooltip: "A Bluestone Card.",
+                                  onPressed: () {
+                                    print("New card button pressed.");
+                                    showDialogBoxCard();
+                                  },
+                                ),
                               ),
                             )
-                          : Container(
-                              margin:
-                                  EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 20.0),
-                              decoration: BoxDecoration(
-                                  color: ThemeSettings.themeData.accentColor,
-                                  shape: BoxShape.rectangle),
-                              child: IconButton(
-                                icon: Icon(Icons.home),
-                                iconSize: 125.0,
-                                color: Colors.blueAccent,
-                                tooltip: "A Bluestone Card.",
-                                onPressed: () {
-                                  print(
-                                      "${snapshot.data[index].data["title"]} was tapped.");
-                                  FirestoreContent.documentSnap =
-                                      snapshot.data[index];
-                                  if (snapshot.data[index].data["type"] ==
-                                      "Sticky") {
-                                    var title =
-                                        snapshot.data[index].data["title"];
-                                    var visibility =
-                                        snapshot.data[index].data["visibility"];
-                                    var textBody =
-                                        snapshot.data[index].data["textBody"];
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => StickyDisplay(
-                                                  titleContent: title,
-                                                  visibility: visibility,
-                                                  textBodyContent: textBody,
-                                                )));
-                                  } else if (snapshot
-                                          .data[index].data["type"] ==
-                                      "Bullet") {
-                                  } else if (snapshot
-                                          .data[index].data["type"] ==
-                                      "Checkbox") {}
-                                },
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(16.0),
+                              child: Container(
+                                margin:
+                                    EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 20.0),
+                                decoration: BoxDecoration(
+                                    color: ThemeSettings.themeData.accentColor,
+                                    shape: BoxShape.rectangle),
+                                child: IconButton(
+                                  icon: Icon(Icons.home),
+                                  iconSize: 125.0,
+                                  color: Colors.blueAccent,
+                                  tooltip: "A Bluestone Card.",
+                                  onPressed: () {
+                                    print(
+                                        "${snapshot.data[index].data["title"]} was tapped. DocumentID: ${snapshot.data[index].documentID}");
+                                    FirestoreContent.cardSnap =
+                                        snapshot.data[index];
+                                    if (snapshot.data[index].data["type"] ==
+                                        "Sticky") {
+                                      var title =
+                                          snapshot.data[index].data["title"];
+                                      var visibility = snapshot
+                                          .data[index].data["visibility"];
+                                      var textBody =
+                                          snapshot.data[index].data["textBody"];
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  StickyDisplay(
+                                                    titleContent: title,
+                                                    visibility: visibility,
+                                                    textBodyContent: textBody,
+                                                  )));
+                                    } else if (snapshot
+                                            .data[index].data["type"] ==
+                                        "Bullet") {
+                                    } else if (snapshot
+                                            .data[index].data["type"] ==
+                                        "Checkbox") {}
+                                  },
+                                ),
                               ),
                             );
                     },
@@ -207,8 +215,22 @@ class _MyHomePageState extends State<MyHomePage> {
                                 iconSize: 125.0,
                                 color: Colors.blueAccent,
                                 tooltip: "A Bluestone Calendar.",
-                                onPressed: () {
+                                onPressed: () async {
                                   print("New calendar button pressed.");
+                                  Map<String, dynamic> data = <String, dynamic>{
+                                    "title": "New Calendar",
+                                    "visibility": true,
+                                    "scope": false,
+                                  };
+                                  CollectionReference reference =
+                                      Firestore.instance.collection(
+                                          "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs");
+                                  FirestoreContent.calendarDoc = await reference.add(data).whenComplete(() {
+                                    setState(() {});
+                                  });
+                                  print("New Calendar Created. Document ID: ${FirestoreContent.calendarDoc.documentID}");
+                                  navigateToCalendar(FirestoreContent
+                                      .calendarSnap.data["title"]);
                                 },
                               ),
                             )
@@ -225,7 +247,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                 tooltip: "A Bluestone Calendar.",
                                 onPressed: () {
                                   print(
-                                      "${snapshot.data[index].data["title"]} was tapped.");
+                                      "${snapshot.data[index].data["title"]} was tapped. DocumentID: ${snapshot.data[index].documentID}");
+                                  FirestoreContent.calendarSnap =
+                                      snapshot.data[index];
                                   navigateToCalendar(
                                       snapshot.data[index].data["title"]);
                                 },
