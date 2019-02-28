@@ -4,8 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class StickyDisplay extends StatefulWidget {
-  const StickyDisplay(
-      {UniqueKey key});
+  const StickyDisplay({UniqueKey key});
 
   @override
   _StickyDisplayState createState() => new _StickyDisplayState();
@@ -31,14 +30,12 @@ class _StickyDisplayState extends State<StickyDisplay> {
         floatingActionButton: new FloatingActionButton.extended(
             icon: (_isEditing) ? new Icon(Icons.save) : new Icon(Icons.edit),
             onPressed: () {
-              setState(() {
-                _isEditing = !_isEditing;
-                if (_isEditing == false) {
-                  _saveEditsToDb();
-                  titleContent = _titleController.text;
-                  textBodyContent = _textBodyController.text;
-                }
-              });
+              enableEditing();
+              if (!_isEditing) {
+                _saveEditsToDb();
+                titleContent = _titleController.text;
+                textBodyContent = _textBodyController.text;
+              }
             },
             label: (_isEditing) ? Text("Save") : Text("Edit")),
         body: Center(
@@ -59,7 +56,8 @@ class _StickyDisplayState extends State<StickyDisplay> {
                         Text(
                           _titleController.text,
                           textScaleFactor: 1.5,
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20.0),
                         ),
                       ]),
               ),
@@ -83,7 +81,8 @@ class _StickyDisplayState extends State<StickyDisplay> {
                           _textBodyController.text,
                           textAlign: TextAlign.left,
                           overflow: TextOverflow.clip,
-                          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18.0),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 18.0),
                         ),
                       ),
               ),
@@ -92,7 +91,7 @@ class _StickyDisplayState extends State<StickyDisplay> {
         ));
   }
 
-  void enableEditting() {
+  void enableEditing() {
     setState(() {
       _isEditing = !_isEditing;
       _isEditing ? print("Editing Enabled") : print("Editing Disabled");

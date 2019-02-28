@@ -372,8 +372,8 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
       "description":
           "Beep boop, I am a new Event! Click the edit button to change me!",
       "date": _currentDate,
-      "startTime": TimeOfDay(hour: 0, minute: 0),
-      "endTime": TimeOfDay(hour: 0, minute: 0),
+      "startTime": DateTime(_currentDate.year, _currentDate.month, _currentDate.day, 0, 0),
+      "endTime": DateTime(_currentDate.year, _currentDate.month, _currentDate.day, 0, 0),
     };
 
     CollectionReference reference = Firestore.instance.collection(
@@ -383,6 +383,13 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
     }).catchError((e) => print(e));
     print(
         "New Event Created. Document ID: ${FirestoreContent.eventDoc.documentID}");
+    FirestoreContent.eventSnap = await FirestoreContent.eventDoc.get();
+
+    LocalData.currentEvent.title = FirestoreContent.eventSnap["title"];
+    LocalData.currentEvent.description = FirestoreContent.eventSnap["description"];
+    LocalData.currentEvent.date = FirestoreContent.eventSnap["date"];
+    LocalData.currentEvent.startTime = FirestoreContent.eventSnap["startTime"];
+    LocalData.currentEvent.endTime = FirestoreContent.eventSnap["endTime"];
   }
 
   void _removeCalendarFromDb() async {

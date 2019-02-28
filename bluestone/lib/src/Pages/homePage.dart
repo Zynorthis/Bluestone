@@ -294,6 +294,8 @@ class _MyHomePageState extends State<MyHomePage> {
           "title": "New Card",
           "textBody": "Tap the edit icon then enter text here!",
           "visibility": true,
+          "type": "Sticky",
+          "scope": false,
         };
         CollectionReference reference = Firestore.instance.collection(
             "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs");
@@ -302,6 +304,7 @@ class _MyHomePageState extends State<MyHomePage> {
         });
         print(
             "New Card Created. Document ID: ${FirestoreContent.cardDoc.documentID}");
+        FirestoreContent.cardSnap = await FirestoreContent.cardDoc.get();
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => StickyDisplay()));
         break;
