@@ -243,6 +243,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       "${snapshot.data[index].data["title"]} was tapped. DocumentID: ${snapshot.data[index].documentID}");
                                   FirestoreContent.calendarSnap =
                                       snapshot.data[index];
+                                  FirestoreContent.calendarDoc = Firestore.instance.document("Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/${FirestoreContent.calendarSnap.documentID}");
                                   navigateToCalendar(
                                       snapshot.data[index].data["title"]);
                                 },

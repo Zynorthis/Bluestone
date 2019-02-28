@@ -38,13 +38,26 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
   CalendarCarousel _calendarCarousel;
   EventList<Event> _eventsFromDb = new EventList<Event>();
 
-  Future<List<Event>> getEventsFromDb() async {
-    List<Event> thing;
-    return thing;
+  Future<void> getEventsFromDb() async {
+
+    var events = await Firestore.instance.collection("/Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/${FirestoreContent.calendarDoc.documentID}/Events").getDocuments();
+    _eventsFromDb.clear();
+    events.documents.forEach((doc) {
+      Event event = new Event(
+        date: doc.data["date"],
+        title: doc.data["title"],
+        description: doc.data["description"],
+        startTime: TimeOfDay(hour: doc.data["startTime"].hour, minute: doc.data["startTime"].minute),
+        endTime: TimeOfDay(hour: doc.data["endTime"].hour, minute: doc.data["endTime"].minute),
+        icon: _eventIcon,
+      );
+      _eventsFromDb.add(doc.data["date"], event);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    getEventsFromDb();
     _calendarCarousel = CalendarCarousel<Event>(
       todayBorderColor: Colors.lightGreen,
       onDayPressed: (DateTime date, List<Event> events) {
@@ -329,7 +342,7 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
     }
     events.forEach((event) {
       if (event.date == _currentDate) {
-        LocalData.setEvents(event);
+        LocalData.events.add(event);
       }
     });
   }
@@ -388,8 +401,9 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
     LocalData.currentEvent.title = FirestoreContent.eventSnap["title"];
     LocalData.currentEvent.description = FirestoreContent.eventSnap["description"];
     LocalData.currentEvent.date = FirestoreContent.eventSnap["date"];
-    LocalData.currentEvent.startTime = FirestoreContent.eventSnap["startTime"];
-    LocalData.currentEvent.endTime = FirestoreContent.eventSnap["endTime"];
+    LocalData.currentEvent.startTime = TimeOfDay(hour: FirestoreContent.eventSnap["startTime"].hour, minute: FirestoreContent.eventSnap["startTime"].minute);
+    LocalData.currentEvent.endTime = TimeOfDay(hour: FirestoreContent.eventSnap["endTime"].hour, minute: FirestoreContent.eventSnap["endTime"].minute);
+    LocalData.currentEvent.icon = _eventIcon;
   }
 
   void _removeCalendarFromDb() async {

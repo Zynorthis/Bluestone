@@ -46,7 +46,7 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
               LocalData.currentEvent.description = _descriptionController.text;
               LocalData.currentEvent.startTime = _startTime;
               LocalData.currentEvent.endTime = _endTime;
-              if (!_isEditing) {
+              if (_isEditing) {
                 _saveEventChangesToDb();
               }
             });
