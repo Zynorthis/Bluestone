@@ -160,21 +160,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                         snapshot.data[index];
                                     if (snapshot.data[index].data["type"] ==
                                         "Sticky") {
-                                      var title =
-                                          snapshot.data[index].data["title"];
-                                      var visibility = snapshot
-                                          .data[index].data["visibility"];
-                                      var textBody =
-                                          snapshot.data[index].data["textBody"];
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  StickyDisplay(
-                                                    titleContent: title,
-                                                    visibility: visibility,
-                                                    textBodyContent: textBody,
-                                                  )));
+                                                  StickyDisplay()));
                                     } else if (snapshot
                                             .data[index].data["type"] ==
                                         "Bullet") {
@@ -225,10 +215,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                   CollectionReference reference =
                                       Firestore.instance.collection(
                                           "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs");
-                                  FirestoreContent.calendarDoc = await reference.add(data).whenComplete(() {
+                                  FirestoreContent.calendarDoc = await reference
+                                      .add(data)
+                                      .whenComplete(() {
                                     setState(() {});
                                   });
-                                  print("New Calendar Created. Document ID: ${FirestoreContent.calendarDoc.documentID}");
+                                  print(
+                                      "New Calendar Created. Document ID: ${FirestoreContent.calendarDoc.documentID}");
                                   navigateToCalendar(FirestoreContent
                                       .calendarSnap.data["title"]);
                                 },
@@ -296,18 +289,21 @@ class _MyHomePageState extends State<MyHomePage> {
     )) {
       case CardChoices.STICKY:
         print("Card Type - Sticky - was selected.");
-        String title = "New Card";
-        String textBody = "Enter text here!";
-        bool visibility =
-            false; // false visabilty means private, new cards are set to private by default
+        // false visabilty means private, new cards are set to private by default
+        Map<String, dynamic> data = <String, dynamic>{
+          "title": "New Card",
+          "textBody": "Tap the edit icon then enter text here!",
+          "visibility": true,
+        };
+        CollectionReference reference = Firestore.instance.collection(
+            "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs");
+        FirestoreContent.cardDoc = await reference.add(data).whenComplete(() {
+          setState(() {});
+        });
+        print(
+            "New Card Created. Document ID: ${FirestoreContent.cardDoc.documentID}");
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => StickyDisplay(
-                      titleContent: title,
-                      textBodyContent: textBody,
-                      visibility: visibility,
-                    )));
+            context, MaterialPageRoute(builder: (context) => StickyDisplay()));
         break;
       case CardChoices.BULLET:
         print("Card Type - Bullet - was selected.");

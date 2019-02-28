@@ -99,18 +99,7 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
           label: Text("Add Event"),
           onPressed: () {
             print("Begin Event Creation.");
-
-            Event event = new Event(
-                date: _currentDate,
-                title: "New Event",
-                description:
-                    "Beep boop, I am a new Event! Click the edit button to change me!",
-                icon: _eventIcon,
-                startTime: TimeOfDay(hour: 0, minute: 0),
-                endTime: TimeOfDay(hour: 0, minute: 0));
-            LocalData.currentEvent = event;
-            //_eventsFromDb.add(_currentDate, event);
-            _saveEventEditsToDb(event);
+            _addNewEventToDb();
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => EventDetailsPage()));
           },
@@ -377,24 +366,26 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
     }).catchError((e) => print(e));
   }
 
-  void _saveEventEditsToDb(event) async {
+  void _addNewEventToDb() async {
     Map<String, dynamic> data = <String, dynamic>{
-      "title": event.title,
-      "description": event.description,
-      "date": event.date,
-      "startTime": event.startTime,
-      "endTime": event.endTime,
+      "title": "New Event",
+      "description":
+          "Beep boop, I am a new Event! Click the edit button to change me!",
+      "date": _currentDate,
+      "startTime": TimeOfDay(hour: 0, minute: 0),
+      "endTime": TimeOfDay(hour: 0, minute: 0),
     };
-    var id = FirestoreContent.calendarSnap.documentID;
-    FirestoreContent.eventDoc = Firestore.instance.document(
-        "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/${FirestoreContent.calendarDoc.documentID}/Events/$id");
-    FirestoreContent.eventDoc.updateData(data).whenComplete(() {
-      print("Document Updated.");
+
+    CollectionReference reference = Firestore.instance.collection(
+        "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/${FirestoreContent.calendarDoc.documentID}/Events");
+    FirestoreContent.eventDoc = await reference.add(data).whenComplete(() {
       setState(() {});
     }).catchError((e) => print(e));
+    print(
+        "New Event Created. Document ID: ${FirestoreContent.eventDoc.documentID}");
   }
 
-  void _removeFromDb() async {
+  void _removeCalendarFromDb() async {
     var id = FirestoreContent.calendarSnap.documentID;
     FirestoreContent.firestoreDoc = Firestore.instance.document(
         "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/$id");

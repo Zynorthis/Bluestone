@@ -5,10 +5,7 @@ import 'package:flutter/material.dart';
 
 class StickyDisplay extends StatefulWidget {
   const StickyDisplay(
-      {UniqueKey key,
-      @required String textBodyContent,
-      @required String titleContent,
-      @required bool visibility});
+      {UniqueKey key});
 
   @override
   _StickyDisplayState createState() => new _StickyDisplayState();
