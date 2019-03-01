@@ -50,6 +50,7 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
         startTime: TimeOfDay(hour: doc.data["startTime"].hour, minute: doc.data["startTime"].minute),
         endTime: TimeOfDay(hour: doc.data["endTime"].hour, minute: doc.data["endTime"].minute),
         icon: _eventIcon,
+        fbID: doc.documentID,
       );
       _eventsFromDb.add(doc.data["date"], event);
     });
@@ -404,6 +405,7 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
     LocalData.currentEvent.startTime = TimeOfDay(hour: FirestoreContent.eventSnap["startTime"].hour, minute: FirestoreContent.eventSnap["startTime"].minute);
     LocalData.currentEvent.endTime = TimeOfDay(hour: FirestoreContent.eventSnap["endTime"].hour, minute: FirestoreContent.eventSnap["endTime"].minute);
     LocalData.currentEvent.icon = _eventIcon;
+    LocalData.currentEvent.fbID = FirestoreContent.eventSnap.documentID;
   }
 
   void _removeCalendarFromDb() async {

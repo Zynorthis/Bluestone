@@ -27,6 +27,55 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("${_titleController.text}"),
+        flexibleSpace: Container(
+            alignment: Alignment(0.85, 0.6),
+            child: IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () {
+                print("Delete button Tapped.");
+                return showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) {
+                      return new AlertDialog(
+                        content:
+                            new Text("Are you sure you want to delete this?"),
+                        actions: <Widget>[
+                          new FlatButton(
+                            child: new Text("Yes"),
+                            onPressed: () {
+                              print(
+                                  "Removing ${LocalData.currentEvent.fbID}...");
+                              FirestoreContent.eventDoc = Firestore.instance
+                                  .document(
+                                      "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/${FirestoreContent.calendarSnap.documentID}/Events/${LocalData.currentEvent.fbID}");
+                              FirestoreContent.eventDoc
+                                  .delete()
+                                  .whenComplete(() {
+                                setState(() {});
+                              }).catchError((e) => print(e));
+                              print("Document Deleted.");
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                          ),
+                          new FlatButton(
+                            child: new Text("No"),
+                            onPressed: () {
+                              print(
+                                  "${LocalData.currentEvent.fbID} will not be deleted.");
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      );
+                    });
+              },
+              color: Colors.white,
+              tooltip: "Tap to Delete",
+              iconSize: 25.0,
+            ),
+          ),
       ),
       floatingActionButton: new FloatingActionButton.extended(
           icon: (_isEditing)
