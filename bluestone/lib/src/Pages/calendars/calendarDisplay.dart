@@ -107,6 +107,55 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
     return new Scaffold(
         appBar: AppBar(
           title: Text(FirestoreContent.calendarSnap.data["title"]),
+          flexibleSpace: Container(
+            alignment: Alignment(0.85, 0.6),
+            child: IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () {
+                print("Delete button Tapped.");
+                return showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (BuildContext context) {
+                      return new AlertDialog(
+                        content:
+                            new Text("Are you sure you want to delete this?"),
+                        actions: <Widget>[
+                          new FlatButton(
+                            child: new Text("Yes"),
+                            onPressed: () {
+                              print(
+                                  "Removing ${FirestoreContent.calendarSnap.documentID}...");
+                              FirestoreContent.calendarDoc = Firestore.instance
+                                  .document(
+                                      "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/${FirestoreContent.calendarSnap.documentID}");
+                              FirestoreContent.calendarDoc
+                                  .delete()
+                                  .whenComplete(() {
+                                setState(() {});
+                              }).catchError((e) => print(e));
+                              print("Document Deleted.");
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                          ),
+                          new FlatButton(
+                            child: new Text("No"),
+                            onPressed: () {
+                              print(
+                                  "${FirestoreContent.calendarSnap.documentID} will not be deleted.");
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      );
+                    });
+              },
+              color: Colors.white,
+              tooltip: "Tap to Delete",
+              iconSize: 25.0,
+            ),
+          ),
         ),
         floatingActionButton: new FloatingActionButton.extended(
           icon: Icon(Icons.add),
