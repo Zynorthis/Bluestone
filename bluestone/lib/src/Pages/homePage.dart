@@ -21,11 +21,13 @@ class MyHomePage extends StatefulWidget {
 enum CardChoices { STICKY, BULLET, CHECKBOX }
 
 class _MyHomePageState extends State<MyHomePage> {
+  TextEditingController _searchBar = new TextEditingController();
+  bool haveResults = false;
+
   @override
   Widget build(BuildContext context) {
-    
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: Text(
@@ -99,8 +101,9 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           bottom: TabBar(
             tabs: [
-              Tab(icon: Icon(Icons.view_list)),
-              Tab(icon: Icon(Icons.calendar_today)),
+              Tab(text: "Cards",),
+              Tab(text: "Calendars",),
+              Tab(text: "Search",),
             ],
           ),
         ),
@@ -129,11 +132,17 @@ class _MyHomePageState extends State<MyHomePage> {
                                 decoration: BoxDecoration(
                                     color: ThemeSettings.themeData.accentColor,
                                     shape: BoxShape.rectangle),
-                                child: IconButton(
-                                  icon: Icon(Icons.home),
-                                  iconSize: 125.0,
-                                  color: Colors.blueAccent,
-                                  tooltip: "A Bluestone Card.",
+                                child: FlatButton.icon(
+                                  label: Expanded(
+                                    child: Text(
+                                      "Add A New Card",
+                                      style: TextStyle(fontSize: 20.0),
+                                    ),
+                                  ),
+                                  icon: Icon(
+                                    Icons.add,
+                                    size: 75.0,
+                                  ),
                                   onPressed: () {
                                     print("New card button pressed.");
                                     showDialogBoxCard();
@@ -149,11 +158,18 @@ class _MyHomePageState extends State<MyHomePage> {
                                 decoration: BoxDecoration(
                                     color: ThemeSettings.themeData.accentColor,
                                     shape: BoxShape.rectangle),
-                                child: IconButton(
-                                  icon: Icon(Icons.tab_unselected),
-                                  iconSize: 125.0,
-                                  color: Colors.blueAccent,
-                                  tooltip: "A Bluestone Card.",
+                                child: FlatButton.icon(
+                                  clipBehavior: Clip.antiAlias,
+                                  label: Expanded(
+                                    child: Text(
+                                      "${snapshot.data[index].data["title"]}",
+                                      style: TextStyle(fontSize: 20.0),
+                                    ),
+                                  ),
+                                  icon: Icon(
+                                    Icons.view_headline,
+                                    size: 75.0,
+                                  ),
                                   onPressed: () {
                                     print(
                                         "${snapshot.data[index].data["title"]} was tapped. DocumentID: ${snapshot.data[index].documentID}");
@@ -201,11 +217,14 @@ class _MyHomePageState extends State<MyHomePage> {
                               decoration: BoxDecoration(
                                   color: ThemeSettings.themeData.accentColor,
                                   shape: BoxShape.rectangle),
-                              child: IconButton(
-                                icon: Icon(Icons.add),
-                                iconSize: 125.0,
-                                color: Colors.blueAccent,
-                                tooltip: "A Bluestone Calendar.",
+                              child: FlatButton.icon(
+                                label: Expanded(
+                                  child: Text(
+                                    "Add A New Calendar",
+                                    style: TextStyle(fontSize: 20.0),
+                                  ),
+                                ),
+                                icon: Icon(Icons.add, size: 75.0),
                                 onPressed: () async {
                                   print("New calendar button pressed.");
                                   Map<String, dynamic> data = <String, dynamic>{
@@ -234,17 +253,25 @@ class _MyHomePageState extends State<MyHomePage> {
                               decoration: BoxDecoration(
                                   color: ThemeSettings.themeData.accentColor,
                                   shape: BoxShape.rectangle),
-                              child: IconButton(
-                                icon: Icon(Icons.home),
-                                iconSize: 125.0,
-                                color: Colors.blueAccent,
-                                tooltip: "A Bluestone Calendar.",
+                              child: FlatButton.icon(
+                                label: Expanded(
+                                  child: Text(
+                                    "${snapshot.data[index].data["title"]}",
+                                    style: TextStyle(fontSize: 20.0),
+                                  ),
+                                ),
+                                icon: Icon(
+                                  Icons.calendar_today,
+                                  size: 75.0,
+                                ),
                                 onPressed: () {
                                   print(
                                       "${snapshot.data[index].data["title"]} was tapped. DocumentID: ${snapshot.data[index].documentID}");
                                   FirestoreContent.calendarSnap =
                                       snapshot.data[index];
-                                  FirestoreContent.calendarDoc = Firestore.instance.document("Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/${FirestoreContent.calendarSnap.documentID}");
+                                  FirestoreContent.calendarDoc =
+                                      Firestore.instance.document(
+                                          "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/${FirestoreContent.calendarSnap.documentID}");
                                   navigateToCalendar(
                                       snapshot.data[index].data["title"]);
                                 },
@@ -255,6 +282,32 @@ class _MyHomePageState extends State<MyHomePage> {
                 }
               },
             ),
+            Center(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.all(20.0),
+                    child: TextField(
+                      controller: _searchBar,
+                      maxLength: 18,
+                      enableInteractiveSelection: true,
+                      decoration: InputDecoration(icon: Icon(Icons.search)),
+                    ),
+                  ),
+                  (haveResults)
+                      ? FutureBuilder(
+                          future: null,
+                          builder: (_, builder) {},
+                        )
+                      : Expanded(
+                          child: Text(
+                            "Search For Calendars and Cards here.",
+                            style: TextStyle(fontSize: 18.0),
+                          ),
+                        )
+                ],
+              ),
+            )
           ],
         ),
       ),
@@ -346,6 +399,14 @@ class _MyHomePageState extends State<MyHomePage> {
             "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/")
         .getDocuments();
     return collectionOfCalendars.documents;
+  }
+
+  Future searchResults() async {
+    var collectionOfResults;
+    collectionOfResults += await Firestore.instance
+        .collection("Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/")
+        .getDocuments();
+    return collectionOfResults;
   }
 
   Icon iconMapping() {

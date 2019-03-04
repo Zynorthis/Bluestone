@@ -113,9 +113,21 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
     return new Scaffold(
         appBar: AppBar(
           title: Text(FirestoreContent.calendarSnap.data["title"]),
-          flexibleSpace: Container(
-            alignment: Alignment(0.85, 0.6),
-            child: IconButton(
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.edit),
+              tooltip: "Edit calendar settings",
+              onPressed: () {
+                print("Begin Calendar Edit");
+                print(
+                    "Current Calendar: ${FirestoreContent.calendarSnap.documentID}");
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CalendarEditPage()));
+              },
+            ),
+            IconButton(
               icon: Icon(Icons.delete),
               onPressed: () {
                 print("Delete button Tapped.");
@@ -160,20 +172,6 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
               color: Colors.white,
               tooltip: "Tap to Delete",
               iconSize: 25.0,
-            ),
-          ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.edit),
-              onPressed: () {
-                print("Begin Calendar Edit");
-                print(
-                    "Current Calendar: ${FirestoreContent.calendarSnap.documentID}");
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CalendarEditPage()));
-              },
             ),
           ],
         ),

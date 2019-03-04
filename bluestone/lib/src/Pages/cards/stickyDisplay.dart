@@ -102,11 +102,13 @@ class _StickyDisplayState extends State<StickyDisplay> {
                         maxLength: 18,
                       )
                     : new Row(children: <Widget>[
-                        Text(
-                          _titleController.text,
-                          textScaleFactor: 1.5,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 20.0),
+                        Expanded(
+                          child: Text(
+                            _titleController.text,
+                            textScaleFactor: 1.5,
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20.0),
+                          ),
                         ),
                       ]),
               ),
