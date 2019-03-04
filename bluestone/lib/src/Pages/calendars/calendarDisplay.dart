@@ -1,3 +1,4 @@
+import 'package:bluestone/src/Pages/calendars/calendarEditPage.dart';
 import 'package:bluestone/src/Pages/calendars/eventDetails.dart';
 import 'package:bluestone/src/components/extras.dart';
 import 'package:bluestone/src/components/firebaseContent.dart';
@@ -10,7 +11,7 @@ import 'package:intl/intl.dart';
 
 class CalendarDisplay extends StatefulWidget {
   CalendarDisplay({String title});
-  String title;
+  final String title = "";
 
   @override
   _CalendarDisplayState createState() => _CalendarDisplayState(title: title);
@@ -39,16 +40,21 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
   EventList<Event> _eventsFromDb = new EventList<Event>();
 
   Future<void> getEventsFromDb() async {
-
-    var events = await Firestore.instance.collection("/Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/${FirestoreContent.calendarDoc.documentID}/Events").getDocuments();
+    var events = await Firestore.instance
+        .collection(
+            "/Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/${FirestoreContent.calendarDoc.documentID}/Events")
+        .getDocuments();
     _eventsFromDb.clear();
     events.documents.forEach((doc) {
       Event event = new Event(
         date: doc.data["date"],
         title: doc.data["title"],
         description: doc.data["description"],
-        startTime: TimeOfDay(hour: doc.data["startTime"].hour, minute: doc.data["startTime"].minute),
-        endTime: TimeOfDay(hour: doc.data["endTime"].hour, minute: doc.data["endTime"].minute),
+        startTime: TimeOfDay(
+            hour: doc.data["startTime"].hour,
+            minute: doc.data["startTime"].minute),
+        endTime: TimeOfDay(
+            hour: doc.data["endTime"].hour, minute: doc.data["endTime"].minute),
         icon: _eventIcon,
         fbID: doc.documentID,
       );
@@ -156,6 +162,20 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
               iconSize: 25.0,
             ),
           ),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () {
+                print("Begin Calendar Edit");
+                print(
+                    "Current Calendar: ${FirestoreContent.calendarSnap.documentID}");
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CalendarEditPage()));
+              },
+            ),
+          ],
         ),
         floatingActionButton: new FloatingActionButton.extended(
           icon: Icon(Icons.add),
@@ -435,8 +455,10 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
       "description":
           "Beep boop, I am a new Event! Click the edit button to change me!",
       "date": _currentDate,
-      "startTime": DateTime(_currentDate.year, _currentDate.month, _currentDate.day, 0, 0),
-      "endTime": DateTime(_currentDate.year, _currentDate.month, _currentDate.day, 0, 0),
+      "startTime": DateTime(
+          _currentDate.year, _currentDate.month, _currentDate.day, 0, 0),
+      "endTime": DateTime(
+          _currentDate.year, _currentDate.month, _currentDate.day, 0, 0),
     };
 
     CollectionReference reference = Firestore.instance.collection(
@@ -449,22 +471,16 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
     FirestoreContent.eventSnap = await FirestoreContent.eventDoc.get();
 
     LocalData.currentEvent.title = FirestoreContent.eventSnap["title"];
-    LocalData.currentEvent.description = FirestoreContent.eventSnap["description"];
+    LocalData.currentEvent.description =
+        FirestoreContent.eventSnap["description"];
     LocalData.currentEvent.date = FirestoreContent.eventSnap["date"];
-    LocalData.currentEvent.startTime = TimeOfDay(hour: FirestoreContent.eventSnap["startTime"].hour, minute: FirestoreContent.eventSnap["startTime"].minute);
-    LocalData.currentEvent.endTime = TimeOfDay(hour: FirestoreContent.eventSnap["endTime"].hour, minute: FirestoreContent.eventSnap["endTime"].minute);
+    LocalData.currentEvent.startTime = TimeOfDay(
+        hour: FirestoreContent.eventSnap["startTime"].hour,
+        minute: FirestoreContent.eventSnap["startTime"].minute);
+    LocalData.currentEvent.endTime = TimeOfDay(
+        hour: FirestoreContent.eventSnap["endTime"].hour,
+        minute: FirestoreContent.eventSnap["endTime"].minute);
     LocalData.currentEvent.icon = _eventIcon;
     LocalData.currentEvent.fbID = FirestoreContent.eventSnap.documentID;
-  }
-
-  void _removeCalendarFromDb() async {
-    var id = FirestoreContent.calendarSnap.documentID;
-    FirestoreContent.firestoreDoc = Firestore.instance.document(
-        "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/$id");
-    FirestoreContent.firestoreDoc.delete().whenComplete(() {
-      print("Removed Document.");
-      setState(() {});
-    }).catchError((e) => print(e));
-    Navigator.pop(context);
   }
 }

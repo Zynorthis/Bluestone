@@ -11,6 +11,7 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _email, _password;
+  String _tempEmail, _tempPassword, _tempValidationPass;
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -22,17 +23,23 @@ class _RegisterPageState extends State<RegisterPage> {
         key: _formKey,
         child: Column(
           children: <Widget>[
+            SizedBox(height: 50.0,),
             Container(
               width: 375.0,
               padding: EdgeInsets.all(16.0),
               child: TextFormField(
                 validator: (input) {
-                  if (input.isEmpty) {
+                  _tempEmail = input;
+                  if (_tempEmail.isEmpty) {
                     return "Please provide an email address.";
-                  } else if (!input.contains("@")) {
+                  } else if (!_tempEmail.contains("@")) {
                     return "Please provide a valid email address.";
-                  } else if (input.contains(" ")) {
-                    return input = input.trim();
+                  } else if (_tempEmail.contains(" ")) {
+                    input.trim();
+                    input.trimRight();
+                    input.trimLeft();
+                    _tempEmail = input;
+                    return _tempEmail;
                   }
                 },
                 onSaved: (input) => _email = input,
@@ -42,7 +49,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   hintText: "Input an Email Address",
                   icon: new Icon(
                     Icons.email,
-                    color: ThemeSettings.themeData.accentColor,
+                    color: ThemeSettings.themeData.primaryColor,
                   ),
                 ),
               ),
@@ -52,9 +59,10 @@ class _RegisterPageState extends State<RegisterPage> {
               padding: EdgeInsets.all(16.0),
               child: TextFormField(
                 validator: (input) {
-                  if (input.isEmpty) {
+                  _tempPassword = input;
+                  if (_tempPassword.isEmpty) {
                     return "Please provide a password.";
-                  } else if (input.length < 6 || input.length > 20) {
+                  } else if (_tempPassword.length < 6 || _tempPassword.length > 20) {
                     return "Passwords must be between 6-20 characters long.";
                   }
                 },
@@ -65,7 +73,32 @@ class _RegisterPageState extends State<RegisterPage> {
                   hintText: "Input a Password",
                   icon: new Icon(
                     Icons.lock,
-                    color: ThemeSettings.themeData.accentColor,
+                    color: ThemeSettings.themeData.primaryColor,
+                  ),
+                ),
+                obscureText: true,
+              ),
+            ),
+            Container(
+              width: 375.0,
+              padding: EdgeInsets.all(16.0),
+              child: TextFormField(
+                validator: (input) {
+                  _tempValidationPass = input;
+                  if (_tempValidationPass != _tempPassword) {
+                    return "Passwords do not match.";
+                  } else if (_tempValidationPass.length < 6 || _tempValidationPass.length > 20) {
+                    return "Passwords must be between 6-20 characters long.";
+                  }
+                },
+                onSaved: (input) => _password = input,
+                decoration: InputDecoration(
+                  labelText: "Confirm Password",
+                  contentPadding: EdgeInsets.all(10.0),
+                  hintText: "Confirm Password by re-typing it",
+                  icon: new Icon(
+                    Icons.lock,
+                    color: ThemeSettings.themeData.primaryColor,
                   ),
                 ),
                 obscureText: true,

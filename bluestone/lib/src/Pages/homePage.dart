@@ -23,6 +23,7 @@ enum CardChoices { STICKY, BULLET, CHECKBOX }
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -129,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     color: ThemeSettings.themeData.accentColor,
                                     shape: BoxShape.rectangle),
                                 child: IconButton(
-                                  icon: Icon(Icons.add),
+                                  icon: Icon(Icons.home),
                                   iconSize: 125.0,
                                   color: Colors.blueAccent,
                                   tooltip: "A Bluestone Card.",
@@ -149,7 +150,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     color: ThemeSettings.themeData.accentColor,
                                     shape: BoxShape.rectangle),
                                 child: IconButton(
-                                  icon: Icon(Icons.home),
+                                  icon: Icon(Icons.tab_unselected),
                                   iconSize: 125.0,
                                   color: Colors.blueAccent,
                                   tooltip: "A Bluestone Card.",

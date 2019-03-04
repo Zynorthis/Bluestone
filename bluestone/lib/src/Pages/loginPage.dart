@@ -11,6 +11,7 @@ class SignInManager extends StatefulWidget {
 
 class _SignInManagerState extends State<SignInManager> {
   String _email, _password;
+  bool isValid = true;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -25,6 +26,10 @@ class _SignInManagerState extends State<SignInManager> {
         key: _formKey,
         child: Column(
           children: <Widget>[
+            SizedBox(height: 50.0,),
+            Container(
+              child: (isValid) ? null : Text("Unable to sign in, please try again.", style: TextStyle(color: Colors.red),),
+            ),
             Container(
               width: 375.0,
               padding: EdgeInsets.all(16.0),
@@ -35,18 +40,21 @@ class _SignInManagerState extends State<SignInManager> {
                   } else if (!input.contains("@")) {
                     return "Please provide a valid email address.";
                   }
-                  // else if (input.contains(" ")) {
-                  //   return input = input.trim();
-                  // }
+                  else if (input.contains(" ")) {
+                    input.trim();
+                    input.trimLeft();
+                    input.trimRight();
+                    return input;
+                  }
                 },
-                onSaved: (input) => _email = input.trim(),
+                onSaved: (input) => _email = input,
                 decoration: InputDecoration(
                   labelText: "Email Address",
                   contentPadding: EdgeInsets.all(10.0),
                   hintText: "Input an Email Address",
                   icon: new Icon(
                     Icons.email,
-                    color: ThemeSettings.themeData.accentColor,
+                    color: ThemeSettings.themeData.primaryColor,
                   ),
                 ),
               ),
@@ -69,16 +77,19 @@ class _SignInManagerState extends State<SignInManager> {
                   hintText: "Input a Password",
                   icon: new Icon(
                     Icons.lock,
-                    color: ThemeSettings.themeData.accentColor,
+                    color: ThemeSettings.themeData.primaryColor,
                   ),
                 ),
                 obscureText: true,
               ),
             ),
             RaisedButton(
-              onPressed: () {
-                showLoadingIndicator();
-                signIn();
+              onPressed: () async {
+                CurrentLoggedInUser.user = null;
+                await signIn();
+                while (CurrentLoggedInUser.user == null) {
+                  showLoadingIndicator();
+                }
                 // final snackBar = SnackBar(content: Text("Logging in..."));
                 // Scaffold.of(context).showSnackBar(snackBar);
               },
@@ -92,7 +103,9 @@ class _SignInManagerState extends State<SignInManager> {
   }
 
   Widget showLoadingIndicator() {
-    return new CircularProgressIndicator();
+    return new Center(
+      child: CircularProgressIndicator(),
+    );
   }
 
   Future<void> signIn() async {
@@ -103,8 +116,8 @@ class _SignInManagerState extends State<SignInManager> {
         
         // here I capture the FirebaseUser we get back with the
         // user attached to the CurrentLoggedInUser class. This
-        // is so anywhere else in the app when need we can easily
-        // grab the current user details from and use them.
+        // is so anywhere else in the app when needed we can easily
+        // grab the current logged in user details and use them.
 
         CurrentLoggedInUser.user = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: _email, password: _password);
@@ -119,6 +132,7 @@ class _SignInManagerState extends State<SignInManager> {
                     )));
       } catch (error) {
         print(error.message);
+        isValid = false;
       }
     }
   }
