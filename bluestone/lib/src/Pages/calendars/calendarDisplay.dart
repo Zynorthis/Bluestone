@@ -434,21 +434,6 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
             builder: (context) => EventDetailsPage(), fullscreenDialog: true));
   }
 
-  void _saveCalendarEditsToDb() async {
-    Map<String, dynamic> data = <String, dynamic>{
-      "title": title,
-      "visibility": true,
-      "scope": false,
-    };
-    var id = FirestoreContent.calendarSnap.documentID;
-    FirestoreContent.calendarDoc = Firestore.instance.document(
-        "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/$id");
-    FirestoreContent.calendarDoc.updateData(data).whenComplete(() {
-      print("Document Updated.");
-      setState(() {});
-    }).catchError((e) => print(e));
-  }
-
   void _addNewEventToDb() async {
     Map<String, dynamic> data = <String, dynamic>{
       "title": "New Event",
