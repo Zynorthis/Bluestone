@@ -453,17 +453,17 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
         "New Event Created. Document ID: ${FirestoreContent.eventDoc.documentID}");
     FirestoreContent.eventSnap = await FirestoreContent.eventDoc.get();
 
-    LocalData.currentEvent.title = FirestoreContent.eventSnap["title"];
-    LocalData.currentEvent.description =
-        FirestoreContent.eventSnap["description"];
-    LocalData.currentEvent.date = FirestoreContent.eventSnap["date"];
-    LocalData.currentEvent.startTime = TimeOfDay(
-        hour: FirestoreContent.eventSnap["startTime"].hour,
-        minute: FirestoreContent.eventSnap["startTime"].minute);
-    LocalData.currentEvent.endTime = TimeOfDay(
-        hour: FirestoreContent.eventSnap["endTime"].hour,
-        minute: FirestoreContent.eventSnap["endTime"].minute);
-    LocalData.currentEvent.icon = _eventIcon;
-    LocalData.currentEvent.fbID = FirestoreContent.eventSnap.documentID;
+    LocalData.currentEvent = new Event(
+        title: FirestoreContent.eventSnap["title"],
+        description: FirestoreContent.eventSnap["description"],
+        date: FirestoreContent.eventSnap["date"],
+        startTime: TimeOfDay(
+            hour: FirestoreContent.eventSnap["startTime"].hour,
+            minute: FirestoreContent.eventSnap["startTime"].minute),
+        endTime: TimeOfDay(
+            hour: FirestoreContent.eventSnap["endTime"].hour,
+            minute: FirestoreContent.eventSnap["endTime"].minute),
+        icon: _eventIcon,
+        fbID: FirestoreContent.eventSnap.documentID);
   }
 }

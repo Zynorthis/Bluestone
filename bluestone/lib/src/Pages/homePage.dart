@@ -242,6 +242,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   });
                                   print(
                                       "New Calendar Created. Document ID: ${FirestoreContent.calendarDoc.documentID}");
+                                  FirestoreContent.calendarSnap = await FirestoreContent.calendarDoc.get();
                                   navigateToCalendar(FirestoreContent
                                       .calendarSnap.data["title"]);
                                 },

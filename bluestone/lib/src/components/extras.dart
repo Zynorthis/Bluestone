@@ -50,10 +50,10 @@ class ThemeSettings {
 
 class LocalData {
 
-  /// Hold data for a list of given [Event]s
+  /// Holds data for a list of given [Event]s
   static final List<Event> events = new List<Event>();
 
-  static Event currentEvent = new Event();
+  static Event currentEvent = Event(title: "");
 
   static void setEvents(Event event) {
     events.add(event);

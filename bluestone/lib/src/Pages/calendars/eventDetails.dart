@@ -9,10 +9,10 @@ class EventDetailsPage extends StatefulWidget {
 }
 
 class _EventDetailsPageState extends State<EventDetailsPage> {
-  TextEditingController _titleController = new TextEditingController();
-  TextEditingController _descriptionController = new TextEditingController();
-  TimeOfDay _startTime = new TimeOfDay(hour: 0, minute: 0);
-  TimeOfDay _endTime = new TimeOfDay(hour: 0, minute: 0);
+  TextEditingController _titleController = new TextEditingController(text: LocalData.currentEvent.title);
+  TextEditingController _descriptionController = new TextEditingController(text: LocalData.currentEvent.description);
+  TimeOfDay _startTime = new TimeOfDay(hour: LocalData.currentEvent.startTime.hour, minute: LocalData.currentEvent.startTime.minute);
+  TimeOfDay _endTime = new TimeOfDay(hour: LocalData.currentEvent.endTime.hour, minute: LocalData.currentEvent.endTime.minute);
   bool _isEditing = false;
   bool isSetYetStart = false;
   bool isSetYetEnd = false;
