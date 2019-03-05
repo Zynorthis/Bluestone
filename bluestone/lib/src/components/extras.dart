@@ -9,7 +9,7 @@ import 'package:flutter_calendar_carousel/classes/event.dart';
 /// variable in one place versus one variable across the whole app in
 /// many different places.
 /// 
-/// current settings include:
+/// Current settings include:
 /// ``` dart
 ///   primaryColor: Colors.blue
 ///   accentColor: Colors.blue[200]
@@ -27,7 +27,7 @@ import 'package:flutter_calendar_carousel/classes/event.dart';
 ///     fontFamily: "Malgun Gothic"
 ///   ),
 /// 
-///   static final defaultTitle = 'Bluestone [Local dev build]';
+///   static final defaultTitle = 'Bluestone [Demo]';
 /// ```
 
 class ThemeSettings {

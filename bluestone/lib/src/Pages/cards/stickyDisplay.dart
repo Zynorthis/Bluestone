@@ -13,9 +13,9 @@ class StickyDisplay extends StatefulWidget {
 class _StickyDisplayState extends State<StickyDisplay> {
   TextEditingController _titleController = new TextEditingController();
   TextEditingController _textBodyController = new TextEditingController();
-  String textBodyContent = FirestoreContent.cardSnap.data["textBody"];
-  String titleContent = FirestoreContent.cardSnap.data["title"];
-  bool visibility = FirestoreContent.cardSnap.data["visibilty"];
+  String textBodyContent = FirestoreContent.stickySnap.data["textBody"];
+  String titleContent = FirestoreContent.stickySnap.data["title"];
+  bool visibility = FirestoreContent.stickySnap.data["visibilty"];
   bool _isEditing = false;
 
   @override
@@ -43,11 +43,11 @@ class _StickyDisplayState extends State<StickyDisplay> {
                             child: new Text("Yes"),
                             onPressed: () {
                               print(
-                                  "Removing ${FirestoreContent.cardSnap.documentID}...");
-                              FirestoreContent.cardDoc = Firestore.instance
+                                  "Removing ${FirestoreContent.stickySnap.documentID}...");
+                              FirestoreContent.stickyDoc = Firestore.instance
                                   .document(
-                                      "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/${FirestoreContent.cardSnap.documentID}");
-                              FirestoreContent.cardDoc
+                                      "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/${FirestoreContent.stickySnap.documentID}");
+                              FirestoreContent.stickyDoc
                                   .delete()
                                   .whenComplete(() {
                                 setState(() {});
@@ -61,7 +61,7 @@ class _StickyDisplayState extends State<StickyDisplay> {
                             child: new Text("No"),
                             onPressed: () {
                               print(
-                                  "${FirestoreContent.cardSnap.documentID} will not be deleted.");
+                                  "${FirestoreContent.stickySnap.documentID} will not be deleted.");
                               Navigator.pop(context);
                             },
                           ),
@@ -154,20 +154,20 @@ class _StickyDisplayState extends State<StickyDisplay> {
       "title": _titleController.text,
       "textBody": _textBodyController.text,
     };
-    var id = FirestoreContent.cardSnap.documentID;
-    FirestoreContent.cardDoc = Firestore.instance.document(
+    var id = FirestoreContent.stickySnap.documentID;
+    FirestoreContent.stickyDoc = Firestore.instance.document(
         "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/$id");
-    FirestoreContent.cardDoc.updateData(data).whenComplete(() {
+    FirestoreContent.stickyDoc.updateData(data).whenComplete(() {
       print("Document Updated.");
       setState(() {});
     }).catchError((e) => print(e));
   }
 
   void _removeFromDb() async {
-    var id = FirestoreContent.cardSnap.documentID;
-    FirestoreContent.cardDoc = Firestore.instance.document(
+    var id = FirestoreContent.stickySnap.documentID;
+    FirestoreContent.stickyDoc = Firestore.instance.document(
         "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/$id");
-    FirestoreContent.cardDoc.delete().whenComplete(() {
+    FirestoreContent.stickyDoc.delete().whenComplete(() {
       print("Removed Document.");
       setState(() {});
     }).catchError((e) => print(e));

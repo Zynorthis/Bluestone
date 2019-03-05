@@ -23,6 +23,8 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
   Widget build(BuildContext context) {
     _titleController.text = LocalData.currentEvent.title;
     _descriptionController.text = LocalData.currentEvent.description;
+    _timeFormating(_startTime, true);
+    _timeFormating(_endTime, false);
 
     return Scaffold(
       appBar: AppBar(
@@ -91,7 +93,7 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
               LocalData.currentEvent.description = _descriptionController.text;
               LocalData.currentEvent.startTime = _startTime;
               LocalData.currentEvent.endTime = _endTime;
-              if (_isEditing) {
+              if (!_isEditing) {
                 _saveEventChangesToDb();
               }
             });
@@ -209,7 +211,6 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
       context: context,
       initialTime: TimeOfDay(hour: 0, minute: 0),
     );
-    startOrEndTime ? isSetYetStart = true : isSetYetEnd = true;
     if (_selectedTime != null) {
       _timeFormating(_selectedTime, startOrEndTime);
       startOrEndTime
@@ -230,13 +231,6 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
   }
 
   void _timeFormating(TimeOfDay _time, bool startOrEndTime) {
-    // (startOrEndTime)
-    //     ? ((_time.hour > 12)
-    //         ? (formatedHourStart = _time.hour - 12)
-    //         : (formatedHourStart = _time.hour))
-    //     : ((_time.hour > 12)
-    //         ? (formatedHourEnd = _time.hour - 12)
-    //         : (formatedHourEnd = _time.hour));
     if (startOrEndTime) {
       if (_time.hour > 12) {
         formatedHourStart = _time.hour - 12;
@@ -254,6 +248,7 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
         isAMorPMEnd = "AM";
       }
     }
+    startOrEndTime ? isSetYetStart = true : isSetYetEnd = true;
     print("Formatting Complete");
   }
 
@@ -262,10 +257,10 @@ class _EventDetailsPageState extends State<EventDetailsPage> {
       "title": _titleController.text,
       "description": _descriptionController.text,
       "date": LocalData.currentEvent.date,
-      "startTime": _startTime,
-      "endTime": _endTime,
+      "startTime": DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, _startTime.hour, _startTime.minute),
+      "endTime": DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, _endTime.hour, _endTime.minute),
     };
-    var id = FirestoreContent.eventSnap.documentID;
+    var id = LocalData.currentEvent.fbID;
     FirestoreContent.eventDoc = Firestore.instance.document(
         "/Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/${FirestoreContent.calendarDoc.documentID}/Events/$id");
     FirestoreContent.eventDoc.setData(data).whenComplete(() {

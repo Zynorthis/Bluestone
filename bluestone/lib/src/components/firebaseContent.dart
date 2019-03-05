@@ -11,10 +11,14 @@ class CurrentLoggedInUser {
 /// and a [DocumentSnapshot]
 class FirestoreContent {
   static DocumentReference firestoreDoc;
-  static DocumentReference cardDoc;
+  static DocumentReference stickyDoc;
+  static DocumentReference checkboxDoc;
+  static DocumentReference bulletDoc;
   static DocumentReference calendarDoc;
   static DocumentReference eventDoc;
-  static DocumentSnapshot cardSnap;
+  static DocumentSnapshot stickySnap;
+  static DocumentSnapshot checkboxSnap;
+  static DocumentSnapshot bulletSnap;
   static DocumentSnapshot calendarSnap;
   static DocumentSnapshot eventSnap;
 

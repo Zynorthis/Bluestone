@@ -1,4 +1,6 @@
 import 'package:bluestone/src/Pages/calendars/calendarDisplay.dart';
+import 'package:bluestone/src/Pages/cards/bulletDisplay.dart';
+import 'package:bluestone/src/Pages/cards/checkboxDisplay.dart';
 import 'package:bluestone/src/Pages/cards/stickyDisplay.dart';
 import 'package:bluestone/src/Pages/welcomePage.dart';
 import 'package:bluestone/src/components/firebaseContent.dart';
@@ -173,10 +175,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                   onPressed: () {
                                     print(
                                         "${snapshot.data[index].data["title"]} was tapped. DocumentID: ${snapshot.data[index].documentID}");
-                                    FirestoreContent.cardSnap =
-                                        snapshot.data[index];
                                     if (snapshot.data[index].data["type"] ==
                                         "Sticky") {
+                                      FirestoreContent.stickySnap =
+                                        snapshot.data[index];
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -185,9 +187,24 @@ class _MyHomePageState extends State<MyHomePage> {
                                     } else if (snapshot
                                             .data[index].data["type"] ==
                                         "Bullet") {
+                                      FirestoreContent.bulletSnap =
+                                        snapshot.data[index];
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BulletPage()));
                                     } else if (snapshot
                                             .data[index].data["type"] ==
-                                        "Checkbox") {}
+                                        "Checkbox") {
+                                      FirestoreContent.checkboxSnap =
+                                        snapshot.data[index];
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CheckboxPage()));
+                                        }
                                   },
                                 ),
                               ),
@@ -344,10 +361,10 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     )) {
       case CardChoices.STICKY:
+
         print("Card Type - Sticky - was selected.");
-        // false visabilty means private, new cards are set to private by default
         Map<String, dynamic> data = <String, dynamic>{
-          "title": "New Card",
+          "title": "New Sticky Card",
           "textBody": "Tap the edit icon then enter text here!",
           "visibility": true,
           "type": "Sticky",
@@ -355,24 +372,58 @@ class _MyHomePageState extends State<MyHomePage> {
         };
         CollectionReference reference = Firestore.instance.collection(
             "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs");
-        FirestoreContent.cardDoc = await reference.add(data).whenComplete(() {
+        FirestoreContent.stickyDoc = await reference.add(data).whenComplete(() {
           setState(() {});
         });
         print(
-            "New Card Created. Document ID: ${FirestoreContent.cardDoc.documentID}");
-        FirestoreContent.cardSnap = await FirestoreContent.cardDoc.get();
+            "New Card Created. Document ID: ${FirestoreContent.stickyDoc.documentID}");
+        FirestoreContent.stickySnap = await FirestoreContent.stickyDoc.get();
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => StickyDisplay()));
         break;
+
       case CardChoices.BULLET:
+
         print("Card Type - Bullet - was selected.");
-        // Navigator.push(
-        //     context, MaterialPageRoute(builder: (context) => StickyDisplay()));
+        Map<String, dynamic> data = <String, dynamic>{
+          "title": "New Bullet Card",
+          "visibility": true,
+          "type": "Bullet",
+          "scope": false,
+        };
+        CollectionReference reference = Firestore.instance.collection(
+            "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs");
+        FirestoreContent.bulletDoc = await reference.add(data).whenComplete(() {
+          setState(() {});
+        });
+        print(
+            "New Card Created. Document ID: ${FirestoreContent.bulletDoc.documentID}");
+        FirestoreContent.bulletSnap = await FirestoreContent.bulletDoc.get();
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => BulletPage()));
+
         break;
+
       case CardChoices.CHECKBOX:
+
         print("Card Type - Checkbox - was selected.");
-        // Navigator.push(
-        //     context, MaterialPageRoute(builder: (context) => StickyDisplay()));
+        Map<String, dynamic> data = <String, dynamic>{
+          "title": "New Checkbox Card",
+          "visibility": true,
+          "type": "Checkbox",
+          "scope": false,
+        };
+        CollectionReference reference = Firestore.instance.collection(
+            "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs");
+        FirestoreContent.checkboxDoc = await reference.add(data).whenComplete(() {
+          setState(() {});
+        });
+        print(
+            "New Card Created. Document ID: ${FirestoreContent.checkboxDoc.documentID}");
+        FirestoreContent.checkboxSnap = await FirestoreContent.checkboxDoc.get();
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => CheckboxPage()));
+            
         break;
     }
   }
