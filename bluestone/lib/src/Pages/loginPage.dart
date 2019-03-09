@@ -26,9 +26,9 @@ class _SignInManagerState extends State<SignInManager> {
         key: _formKey,
         child: Column(
           children: <Widget>[
-            SizedBox(height: 50.0,),
+            //SizedBox(height: 50.0,),
             Container(
-              child: (isValid) ? null : Text("Unable to sign in, please try again.", style: TextStyle(color: Colors.red),),
+              child: (isValid) ? Text("") : Text("Unable to sign in, please try again.", style: TextStyle(color: Colors.red),),
             ),
             Container(
               width: 375.0,
@@ -88,7 +88,7 @@ class _SignInManagerState extends State<SignInManager> {
                 CurrentLoggedInUser.user = null;
                 await signIn();
                 while (CurrentLoggedInUser.user == null) {
-                  showLoadingIndicator();
+                  // showLoadingIndicator();
                 }
                 // final snackBar = SnackBar(content: Text("Logging in..."));
                 // Scaffold.of(context).showSnackBar(snackBar);
@@ -121,7 +121,6 @@ class _SignInManagerState extends State<SignInManager> {
 
         CurrentLoggedInUser.user = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: _email, password: _password);
-        // Navigator.pop(context);
         Navigator.of(context).pop();
         Navigator.pushReplacement(
             context,
@@ -133,6 +132,7 @@ class _SignInManagerState extends State<SignInManager> {
       } catch (error) {
         print(error.message);
         isValid = false;
+        return;
       }
     }
   }

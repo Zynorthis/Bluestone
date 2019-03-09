@@ -162,15 +162,4 @@ class _StickyDisplayState extends State<StickyDisplay> {
       setState(() {});
     }).catchError((e) => print(e));
   }
-
-  void _removeFromDb() async {
-    var id = FirestoreContent.stickySnap.documentID;
-    FirestoreContent.stickyDoc = Firestore.instance.document(
-        "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/$id");
-    FirestoreContent.stickyDoc.delete().whenComplete(() {
-      print("Removed Document.");
-      setState(() {});
-    }).catchError((e) => print(e));
-    Navigator.pop(context);
-  }
 }

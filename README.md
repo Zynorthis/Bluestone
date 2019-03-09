@@ -2,33 +2,32 @@
 
 Project Bluestone is an application designed to simply and easily organize and keep track of anything. 
 
-## Features
+## <span style="color:royalblue"> Features
 
 Bluestone has a robust login system built with the authentication services from the [Firebase](https://firebase.google.com) cloud infrastructure. This allows for a secure and fast experience for all users. 
 
 Bluestone is composed of primarily two main functioning pieces, Cards and Calendars.
 Cards are the essential building blocks used to organize data and information neat and cleanly. You can add:
- - Descriptions
+ - Sticky Notes
  - Bullet Point List
- - Check Box Style List
+ - Checkbox Style List
 
 Just to name a few! 
 
 Calendars are your standard calendar applications that you're use to but with a little extra customization capability to enhance readablity and overall user experience.
 
-## Development Process
+## <span style="color:royalblue"> Development Process
 
-Bluestone was developted in a two week sprint as a proof of concept mobile application. 
+Bluestone was developed in a two week sprint as a proof of concept mobile application and has been (and will continue to be ) receiving improvements. Bluestone was made with the [Flutter SDK](https://flutter.io/) from google (written in the [Dart](https://www.dartlang.org/) language) and has a Firebase backend storing all of the user credentials and data.
 
-## Installing
+Coming from C# and traditional normalized SQL databases, Dart and Firebase had a bit of a learning to overcome especially when considering Firebase's stucture and how polar opposite it is to what I had been doing. Learning a language in itself can be challenging but to do so and impliment it at a high level is even harder *and* in only two weeks was nuts. But in the end it has made me a better developer and I have learned many skills that I never would have. Things like indepth researching and trouble shooting, use of github issue threads, state management to name a few.
 
-This project is a starting point for a Flutter application.
+## <span style="color:royalblue"> Installing
 
-A few resources to get you started if this is your first Flutter project:
+The offical release apk is not avaliable yet, stay tune for more info!
 
-- [Lab: Write your first Flutter app](https://flutter.io/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.io/docs/cookbook)
+If you have either Android Studio, IntelliJ, or Visual Studio Code follow these steps to install flutter on your machine and emulate the app.
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+| Android Studio/IntelliJ | Visual Studio Code |
+| :----: | :----: |
+| [Instructions](https://flutter.dev/docs/get-started/editor?tab=androidstudio) | [Instructions](https://flutter.dev/docs/get-started/editor?tab=vscode) |

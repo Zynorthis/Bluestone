@@ -103,9 +103,15 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           bottom: TabBar(
             tabs: [
-              Tab(text: "Cards",),
-              Tab(text: "Calendars",),
-              Tab(text: "Search",),
+              Tab(
+                text: "Cards",
+              ),
+              Tab(
+                text: "Calendars",
+              ),
+              Tab(
+                text: "Search",
+              ),
             ],
           ),
         ),
@@ -178,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     if (snapshot.data[index].data["type"] ==
                                         "Sticky") {
                                       FirestoreContent.stickySnap =
-                                        snapshot.data[index];
+                                          snapshot.data[index];
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -188,7 +194,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                             .data[index].data["type"] ==
                                         "Bullet") {
                                       FirestoreContent.bulletSnap =
-                                        snapshot.data[index];
+                                          snapshot.data[index];
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -198,13 +204,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                             .data[index].data["type"] ==
                                         "Checkbox") {
                                       FirestoreContent.checkboxSnap =
-                                        snapshot.data[index];
+                                          snapshot.data[index];
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   CheckboxPage()));
-                                        }
+                                    }
                                   },
                                 ),
                               ),
@@ -259,7 +265,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                   });
                                   print(
                                       "New Calendar Created. Document ID: ${FirestoreContent.calendarDoc.documentID}");
-                                  FirestoreContent.calendarSnap = await FirestoreContent.calendarDoc.get();
+                                  FirestoreContent.calendarSnap =
+                                      await FirestoreContent.calendarDoc.get();
                                   navigateToCalendar(FirestoreContent
                                       .calendarSnap.data["title"]);
                                 },
@@ -336,32 +343,33 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (await showDialog(
       context: context,
       barrierDismissible: true,
-      child: new SimpleDialog(
-        title: Text("Select a Card Type"),
-        children: <Widget>[
-          SimpleDialogOption(
-            onPressed: () {
-              Navigator.pop(context, CardChoices.STICKY);
-            },
-            child: const Text("Sticky"),
-          ),
-          SimpleDialogOption(
-            onPressed: () {
-              Navigator.pop(context, CardChoices.BULLET);
-            },
-            child: const Text("Bullet"),
-          ),
-          SimpleDialogOption(
-            onPressed: () {
-              Navigator.pop(context, CardChoices.CHECKBOX);
-            },
-            child: const Text("Checkbox"),
-          ),
-        ],
-      ),
+      builder: (BuildContext context) {
+        return new SimpleDialog(
+          title: Text("Select a Card Type"),
+          children: <Widget>[
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(context, CardChoices.STICKY);
+              },
+              child: const Text("Sticky"),
+            ),
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(context, CardChoices.BULLET);
+              },
+              child: const Text("Bullet"),
+            ),
+            SimpleDialogOption(
+              onPressed: () {
+                Navigator.pop(context, CardChoices.CHECKBOX);
+              },
+              child: const Text("Checkbox"),
+            ),
+          ],
+        );
+      },
     )) {
       case CardChoices.STICKY:
-
         print("Card Type - Sticky - was selected.");
         Map<String, dynamic> data = <String, dynamic>{
           "title": "New Sticky Card",
@@ -383,7 +391,6 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
 
       case CardChoices.BULLET:
-
         print("Card Type - Bullet - was selected.");
         Map<String, dynamic> data = <String, dynamic>{
           "title": "New Bullet Card",
@@ -405,7 +412,6 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
 
       case CardChoices.CHECKBOX:
-
         print("Card Type - Checkbox - was selected.");
         Map<String, dynamic> data = <String, dynamic>{
           "title": "New Checkbox Card",
@@ -415,15 +421,17 @@ class _MyHomePageState extends State<MyHomePage> {
         };
         CollectionReference reference = Firestore.instance.collection(
             "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs");
-        FirestoreContent.checkboxDoc = await reference.add(data).whenComplete(() {
+        FirestoreContent.checkboxDoc =
+            await reference.add(data).whenComplete(() {
           setState(() {});
         });
         print(
             "New Card Created. Document ID: ${FirestoreContent.checkboxDoc.documentID}");
-        FirestoreContent.checkboxSnap = await FirestoreContent.checkboxDoc.get();
+        FirestoreContent.checkboxSnap =
+            await FirestoreContent.checkboxDoc.get();
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => CheckboxPage()));
-            
+
         break;
     }
   }

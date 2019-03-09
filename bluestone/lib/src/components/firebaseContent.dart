@@ -27,7 +27,4 @@ class FirestoreContent {
   static void setFbCardDocTest(){
     firestoreDoc = Firestore.instance.document("TestData/TestDocument");
   }
-
-  void setData() {
-  }
 }
