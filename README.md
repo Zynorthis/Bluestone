@@ -44,6 +44,10 @@ If you have either Android Studio, IntelliJ, or Visual Studio Code follow these 
 #### Add me on [LinkedIn](#)
 #### Send me an [Email](mailto:jacobtaylor727@outlook.com) with all other question
 
+[<img src="https://github.com/Zynorthis/Bluestone/blob/master/bluestone/github_assests/pictures/trello_icon.png" width="40" height="40" alt="Trello">](https://trello.com/b/KsmSA5bt/bluestone-continued-development "Trello")
 
+[<img src="https://github.com/Zynorthis/Bluestone/blob/master/bluestone/github_assests/pictures/linkedin_icon.png" width="40" height="40" alt="LinkedIn">](# "LinkedIn")
+
+[<img src="https://github.com/Zynorthis/Bluestone/blob/master/bluestone/github_assests/pictures/email_icon.png" width="40" height="40" alt="Email">](mailto:jacobtaylor727@outlook.com "Email")
 
 <hr/>
