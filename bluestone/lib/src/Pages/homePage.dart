@@ -326,20 +326,31 @@ class _MyHomePageState extends State<MyHomePage> {
                 }
               },
             ),
-            Center(
+            Container(
               child: Column(
                 children: <Widget>[
                   Container(
                     margin: const EdgeInsets.all(20.0),
-                    child: TextField(
-                      controller: _searchBar,
-                      maxLength: 18,
-                      enableInteractiveSelection: true,
-                      decoration: InputDecoration(icon: Icon(Icons.search)),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        TextField(
+                          controller: _searchBar,
+                          maxLength: 18,
+                          enableInteractiveSelection: true,
+                          decoration: InputDecoration(icon: Icon(Icons.search)),
+                        ),
+                        RaisedButton(
+                          child: Icon(Icons.send),
+                          onPressed: searchResults,
+                          elevation: 1,
+                        ),
+                      ],
                     ),
                   ),
                   (haveResults)
-                      ? FutureBuilder(
+                      ? Expanded(
+                        child: FutureBuilder(
                           future: searchResults(),
                           builder: (_, snapshot) {
                             if (snapshot.connectionState ==
@@ -442,7 +453,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               );
                             }
                           },
-                        )
+                        ),
+                      ) 
                       : Expanded(
                           child: Text(
                             "Search For Calendars and Cards here.",
@@ -451,7 +463,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         )
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -631,6 +643,7 @@ class _MyHomePageState extends State<MyHomePage> {
         .collection("Calendars/Live/All")
         .where("creatorRef", isEqualTo: _searchBar.text)
         .getDocuments();
+    (collectionOfResults != null) ? haveResults = true : haveResults = false;
     return collectionOfResults.documents;
   }
 
