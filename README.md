@@ -8,8 +8,8 @@ Project Bluestone is an application designed to simply and easily organize and k
 
 Bluestone has a robust login system built with the authentication services from the [Firebase](https://firebase.google.com) cloud infrastructure. This allows for a secure and fast experience for all users. 
 
-Bluestone is composed of primarily two main functioning pieces, Cards and Calendars.
-Cards are the essential building blocks used to organize data and information neat and cleanly. You can add:
+Bluestone is composed primarily of two main functioning pieces, Cards and Calendars.
+Cards are the essential building blocks used to organize and keep track of the simple stuff. All sort of data and information can be tracked neatly and cleanly at your fingertips. You can add:
  - Sticky Notes
  - Bullet Point List
  - Checkbox Style List
@@ -17,6 +17,8 @@ Cards are the essential building blocks used to organize data and information ne
 Just to name a few! 
 
 Calendars are your standard calendar applications that you're use to but with a little extra customization capability to enhance readablity and overall user experience.
+
+Card and Calendars have visiblity and scope settings to allow other users to see and add to your personal cards or calendars.
 
 <hr/>
 

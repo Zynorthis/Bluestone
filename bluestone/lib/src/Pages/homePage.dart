@@ -250,21 +250,40 @@ class _MyHomePageState extends State<MyHomePage> {
                                 icon: Icon(Icons.add, size: 75.0),
                                 onPressed: () async {
                                   print("New calendar button pressed.");
-                                  Map<String, dynamic> data = <String, dynamic>{
-                                    "title": "New Calendar",
-                                    "visibility": true,
-                                    "scope": false,
-                                  };
-                                  CollectionReference reference =
+                                  CollectionReference mainReference =
                                       Firestore.instance.collection(
                                           "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs");
-                                  FirestoreContent.calendarDoc = await reference
-                                      .add(data)
-                                      .whenComplete(() {
+                                  CollectionReference duplicateReference =
+                                      Firestore.instance.collection(
+                                          "Calendars/Live/All/${FirestoreContent.calendarDoc.documentID}");
+                                  Map<String, dynamic> mainData =
+                                      <String, dynamic>{
+                                    "title": "New Calendar",
+                                    "visibility": false,
+                                    "scope": false,
+                                  };
+                                  Map<String, dynamic> duplicateData =
+                                      <String, dynamic>{
+                                    "title": "New Calendar",
+                                    "visibility": false,
+                                    "scope": false,
+                                    "creatorRef":
+                                        "${CurrentLoggedInUser.user.uid}",
+                                  };
+                                  FirestoreContent.calendarDoc =
+                                      await mainReference
+                                          .add(mainData)
+                                          .whenComplete(() {
                                     setState(() {});
                                   });
                                   print(
                                       "New Calendar Created. Document ID: ${FirestoreContent.calendarDoc.documentID}");
+                                  await duplicateReference
+                                      .add(duplicateData)
+                                      .whenComplete(() {
+                                    setState(() {});
+                                  });
+                                  print("Duplicate Document Entry Added.");
                                   FirestoreContent.calendarSnap =
                                       await FirestoreContent.calendarDoc.get();
                                   navigateToCalendar(FirestoreContent
@@ -340,6 +359,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<Null> showDialogBoxCard() async {
+    CollectionReference mainReference = Firestore.instance
+        .collection("Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs");
+    CollectionReference duplicateReference = Firestore.instance
+        .collection("Cards/Live/All/${FirestoreContent.stickyDoc.documentID}");
     switch (await showDialog(
       context: context,
       barrierDismissible: true,
@@ -371,20 +394,30 @@ class _MyHomePageState extends State<MyHomePage> {
     )) {
       case CardChoices.STICKY:
         print("Card Type - Sticky - was selected.");
-        Map<String, dynamic> data = <String, dynamic>{
+        Map<String, dynamic> mainData = <String, dynamic>{
           "title": "New Sticky Card",
           "textBody": "Tap the edit icon then enter text here!",
-          "visibility": true,
+          "visibility": false,
           "type": "Sticky",
           "scope": false,
         };
-        CollectionReference reference = Firestore.instance.collection(
-            "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs");
-        FirestoreContent.stickyDoc = await reference.add(data).whenComplete(() {
+        Map<String, dynamic> duplicateData = <String, dynamic>{
+          "title": "New Sticky Card",
+          "visibility": false,
+          "type": "Sticky",
+          "scope": false,
+          "creatorRef": "${CurrentLoggedInUser.user.uid}"
+        };
+        FirestoreContent.stickyDoc =
+            await mainReference.add(mainData).whenComplete(() {
           setState(() {});
         });
         print(
             "New Card Created. Document ID: ${FirestoreContent.stickyDoc.documentID}");
+        await duplicateReference.add(duplicateData).whenComplete(() {
+          setState(() {});
+        });
+        print("Duplicate Document Entry Added.");
         FirestoreContent.stickySnap = await FirestoreContent.stickyDoc.get();
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => StickyDisplay()));
@@ -392,19 +425,29 @@ class _MyHomePageState extends State<MyHomePage> {
 
       case CardChoices.BULLET:
         print("Card Type - Bullet - was selected.");
-        Map<String, dynamic> data = <String, dynamic>{
+        Map<String, dynamic> mainData = <String, dynamic>{
           "title": "New Bullet Card",
-          "visibility": true,
+          "visibility": false,
           "type": "Bullet",
           "scope": false,
         };
-        CollectionReference reference = Firestore.instance.collection(
-            "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs");
-        FirestoreContent.bulletDoc = await reference.add(data).whenComplete(() {
+        Map<String, dynamic> duplicateData = <String, dynamic>{
+          "title": "New Bullet Card",
+          "visibility": false,
+          "type": "Bullet",
+          "scope": false,
+          "creatorRef": "${CurrentLoggedInUser.user.uid}"
+        };
+        FirestoreContent.bulletDoc =
+            await mainReference.add(mainData).whenComplete(() {
           setState(() {});
         });
         print(
             "New Card Created. Document ID: ${FirestoreContent.bulletDoc.documentID}");
+        await duplicateReference.add(duplicateData).whenComplete(() {
+          setState(() {});
+        });
+        print("Duplicate Document Entry Added.");
         FirestoreContent.bulletSnap = await FirestoreContent.bulletDoc.get();
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => BulletPage()));
@@ -413,20 +456,29 @@ class _MyHomePageState extends State<MyHomePage> {
 
       case CardChoices.CHECKBOX:
         print("Card Type - Checkbox - was selected.");
-        Map<String, dynamic> data = <String, dynamic>{
+        Map<String, dynamic> mainData = <String, dynamic>{
           "title": "New Checkbox Card",
-          "visibility": true,
+          "visibility": false,
           "type": "Checkbox",
           "scope": false,
         };
-        CollectionReference reference = Firestore.instance.collection(
-            "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs");
+        Map<String, dynamic> duplicateData = <String, dynamic>{
+          "title": "New Checkbox Card",
+          "visibility": false,
+          "type": "Checkbox",
+          "scope": false,
+          "creatorRef": "${CurrentLoggedInUser.user.uid}"
+        };
         FirestoreContent.checkboxDoc =
-            await reference.add(data).whenComplete(() {
+            await mainReference.add(mainData).whenComplete(() {
           setState(() {});
         });
         print(
             "New Card Created. Document ID: ${FirestoreContent.checkboxDoc.documentID}");
+        await duplicateReference.add(duplicateData).whenComplete(() {
+          setState(() {});
+        });
+        print("Duplicate Document Entry Added.");
         FirestoreContent.checkboxSnap =
             await FirestoreContent.checkboxDoc.get();
         Navigator.push(
