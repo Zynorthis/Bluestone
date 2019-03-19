@@ -21,95 +21,101 @@ class _RegisterPageState extends State<RegisterPage> {
       backgroundColor: ThemeSettings.themeData.backgroundColor,
       body: Form(
         key: _formKey,
-        child: Column(
-          children: <Widget>[
-            SizedBox(height: 50.0,),
-            Container(
-              width: 375.0,
-              padding: EdgeInsets.all(16.0),
-              child: TextFormField(
-                validator: (input) {
-                  _tempEmail = input;
-                  if (_tempEmail.isEmpty) {
-                    return "Please provide an email address.";
-                  } else if (!_tempEmail.contains("@")) {
-                    return "Please provide a valid email address.";
-                  } else if (_tempEmail.contains(" ")) {
-                    input.trim();
-                    input.trimRight();
-                    input.trimLeft();
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                height: 50.0,
+              ),
+              Container(
+                width: 375.0,
+                padding: EdgeInsets.all(16.0),
+                child: TextFormField(
+                  validator: (input) {
                     _tempEmail = input;
-                    return _tempEmail;
-                  }
-                },
-                onSaved: (input) => _email = input,
-                decoration: InputDecoration(
-                  labelText: "Email Address",
-                  contentPadding: EdgeInsets.all(10.0),
-                  hintText: "Input an Email Address",
-                  icon: new Icon(
-                    Icons.email,
-                    color: ThemeSettings.themeData.primaryColor,
+                    if (_tempEmail.isEmpty) {
+                      return "Please provide an email address.";
+                    } else if (!_tempEmail.contains("@")) {
+                      return "Please provide a valid email address.";
+                    } else if (_tempEmail.contains(" ")) {
+                      input.trim();
+                      input.trimRight();
+                      input.trimLeft();
+                      _tempEmail = input;
+                      return _tempEmail;
+                    }
+                  },
+                  onSaved: (input) => _email = input,
+                  decoration: InputDecoration(
+                    labelText: "Email Address",
+                    contentPadding: EdgeInsets.all(10.0),
+                    hintText: "Input an Email Address",
+                    icon: new Icon(
+                      Icons.email,
+                      color: ThemeSettings.themeData.primaryColor,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Container(
-              width: 375.0,
-              padding: EdgeInsets.all(16.0),
-              child: TextFormField(
-                validator: (input) {
-                  _tempPassword = input;
-                  if (_tempPassword.isEmpty) {
-                    return "Please provide a password.";
-                  } else if (_tempPassword.length < 6 || _tempPassword.length > 20) {
-                    return "Passwords must be between 6-20 characters long.";
-                  }
-                },
-                onSaved: (input) => _password = input,
-                decoration: InputDecoration(
-                  labelText: "Password",
-                  contentPadding: EdgeInsets.all(10.0),
-                  hintText: "Input a Password",
-                  icon: new Icon(
-                    Icons.lock,
-                    color: ThemeSettings.themeData.primaryColor,
+              Container(
+                width: 375.0,
+                padding: EdgeInsets.all(16.0),
+                child: TextFormField(
+                  validator: (input) {
+                    _tempPassword = input;
+                    if (_tempPassword.isEmpty) {
+                      return "Please provide a password.";
+                    } else if (_tempPassword.length < 6 ||
+                        _tempPassword.length > 20) {
+                      return "Passwords must be between 6-20 characters long.";
+                    }
+                  },
+                  onSaved: (input) => _password = input,
+                  decoration: InputDecoration(
+                    labelText: "Password",
+                    contentPadding: EdgeInsets.all(10.0),
+                    hintText: "Input a Password",
+                    icon: new Icon(
+                      Icons.lock,
+                      color: ThemeSettings.themeData.primaryColor,
+                    ),
                   ),
+                  obscureText: true,
                 ),
-                obscureText: true,
               ),
-            ),
-            Container(
-              width: 375.0,
-              padding: EdgeInsets.all(16.0),
-              child: TextFormField(
-                validator: (input) {
-                  _tempValidationPass = input;
-                  if (_tempValidationPass != _tempPassword) {
-                    return "Passwords do not match.";
-                  } else if (_tempValidationPass.length < 6 || _tempValidationPass.length > 20) {
-                    return "Passwords must be between 6-20 characters long.";
-                  }
-                },
-                onSaved: (input) => _password = input,
-                decoration: InputDecoration(
-                  labelText: "Confirm Password",
-                  contentPadding: EdgeInsets.all(10.0),
-                  hintText: "Confirm Password by re-typing it",
-                  icon: new Icon(
-                    Icons.lock,
-                    color: ThemeSettings.themeData.primaryColor,
+              Container(
+                width: 375.0,
+                padding: EdgeInsets.all(16.0),
+                child: TextFormField(
+                  validator: (input) {
+                    _tempValidationPass = input;
+                    if (_tempValidationPass != _tempPassword) {
+                      return "Passwords do not match.";
+                    } else if (_tempValidationPass.length < 6 ||
+                        _tempValidationPass.length > 20) {
+                      return "Passwords must be between 6-20 characters long.";
+                    }
+                  },
+                  onSaved: (input) => _password = input,
+                  decoration: InputDecoration(
+                    labelText: "Confirm Password",
+                    contentPadding: EdgeInsets.all(10.0),
+                    hintText: "Confirm Password by re-typing it",
+                    icon: new Icon(
+                      Icons.lock,
+                      color: ThemeSettings.themeData.primaryColor,
+                    ),
                   ),
+                  obscureText: true,
                 ),
-                obscureText: true,
               ),
-            ),
-            RaisedButton(
-              onPressed: registerFirebaseAccount,
-              child: Text("Register"),
-              color: ThemeSettings.themeData.accentColor,
-            )
-          ],
+              RaisedButton(
+                onPressed: registerFirebaseAccount,
+                child: Text("Register"),
+                color: ThemeSettings.themeData.accentColor,
+              )
+            ],
+          ),
         ),
       ),
     );

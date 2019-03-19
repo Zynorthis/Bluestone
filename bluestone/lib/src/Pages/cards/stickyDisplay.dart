@@ -161,11 +161,11 @@ class _StickyDisplayState extends State<StickyDisplay> {
       print("Live User Document Updated.");
       setState(() {});
     }).catchError((e) => print(e));
-    FirestoreContent.stickyDoc = Firestore.instance.document(
-        "Cards/Live/All/$id");
-    FirestoreContent.stickyDoc.updateData(data).whenComplete(() {
-      print("Live Duplicate Document Updated.");
-      setState(() {});
-    }).catchError((e) => print(e));
+    // FirestoreContent.stickyDoc = Firestore.instance.document(
+    //     "Cards/Live/All/$id");
+    // FirestoreContent.stickyDoc.updateData(data).whenComplete(() {
+    //   print("Live Duplicate Document Updated.");
+    //   setState(() {});
+    // }).catchError((e) => print(e));
   }
 }
