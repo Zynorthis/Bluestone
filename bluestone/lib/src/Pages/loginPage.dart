@@ -24,12 +24,13 @@ class _SignInManagerState extends State<SignInManager> {
       backgroundColor: ThemeSettings.themeData.backgroundColor,
       body: Form(
         key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
+        //child: SingleChildScrollView(
+          child: 
+          Column(
             children: <Widget>[
-              SizedBox(
-                height: 50.0,
-              ),
+              // SizedBox(
+              //   height: 50.0,
+              // ),
               Container(
                 child: (isValid)
                     ? Text("")
@@ -105,7 +106,7 @@ class _SignInManagerState extends State<SignInManager> {
               )
             ],
           ),
-        ),
+        //),
       ),
     );
   }

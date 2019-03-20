@@ -93,9 +93,8 @@ class _CalendarEditPageState extends State<CalendarEditPage> {
       print("Live User Document Updated.");
       setState(() {});
     }).catchError((e) => print(e));
-    FirestoreContent.calendarDoc = Firestore.instance.document(
-        "Calendars/Live/All/$id");
-    FirestoreContent.calendarDoc.updateData(data).whenComplete(() {
+    FirestoreContent.setDocumentReference(id, "Calendars");
+    FirestoreContent.duplicateData.updateData(data).whenComplete(() {
       print("Live Duplicate Document Updated.");
       setState(() {});
     }).catchError((e) => print(e));

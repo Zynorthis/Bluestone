@@ -144,6 +144,9 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
                             onPressed: () {
                               print(
                                   "Removing ${FirestoreContent.calendarSnap.documentID}...");
+                              FirestoreContent.setDocumentReference(
+                                  "${FirestoreContent.calendarSnap.documentID}",
+                                  "Calendars");
                               FirestoreContent.calendarDoc = Firestore.instance
                                   .document(
                                       "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/${FirestoreContent.calendarSnap.documentID}");
@@ -153,6 +156,13 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
                                 setState(() {});
                               }).catchError((e) => print(e));
                               print("Document Deleted.");
+                              print("Removing Duplicate Document...");
+                              FirestoreContent.duplicateData
+                                  .delete()
+                                  .whenComplete(() {
+                                setState(() {});
+                              }).catchError((e) => print(e));
+                              print("Duplicate Deleted.");
                               Navigator.pop(context);
                               Navigator.pop(context);
                             },

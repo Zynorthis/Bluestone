@@ -44,6 +44,9 @@ class _StickyDisplayState extends State<StickyDisplay> {
                             onPressed: () {
                               print(
                                   "Removing ${FirestoreContent.stickySnap.documentID}...");
+                              FirestoreContent.setDocumentReference(
+                                  "${FirestoreContent.stickySnap.documentID}",
+                                  "Cards");
                               FirestoreContent.stickyDoc = Firestore.instance
                                   .document(
                                       "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/${FirestoreContent.stickySnap.documentID}");
@@ -53,6 +56,14 @@ class _StickyDisplayState extends State<StickyDisplay> {
                                 setState(() {});
                               }).catchError((e) => print(e));
                               print("Document Deleted.");
+                              print("Removing Duplicate Document...");
+                              FirestoreContent.duplicateData
+                                  .delete()
+                                  .whenComplete(() {
+                                print("Duplicate Document Deleted.");
+                                setState(() {});
+                              }).catchError((e) => print(e));
+
                               Navigator.pop(context);
                               Navigator.pop(context);
                             },
@@ -161,11 +172,10 @@ class _StickyDisplayState extends State<StickyDisplay> {
       print("Live User Document Updated.");
       setState(() {});
     }).catchError((e) => print(e));
-    // FirestoreContent.stickyDoc = Firestore.instance.document(
-    //     "Cards/Live/All/$id");
-    // FirestoreContent.stickyDoc.updateData(data).whenComplete(() {
-    //   print("Live Duplicate Document Updated.");
-    //   setState(() {});
-    // }).catchError((e) => print(e));
+    FirestoreContent.setDocumentReference(id, "Cards");
+    FirestoreContent.duplicateData.updateData(data).whenComplete(() {
+      print("Live Duplicate Document Updated.");
+      setState(() {});
+    }).catchError((e) => print(e));
   }
 }

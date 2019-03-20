@@ -21,12 +21,13 @@ class _RegisterPageState extends State<RegisterPage> {
       backgroundColor: ThemeSettings.themeData.backgroundColor,
       body: Form(
         key: _formKey,
-        child: SingleChildScrollView(
-          child: Column(
+        // child: SingleChildScrollView(
+          child: 
+          Column(
             children: <Widget>[
-              SizedBox(
-                height: 50.0,
-              ),
+              // SizedBox(
+              //   height: 50.0,
+              // ),
               Container(
                 width: 375.0,
                 padding: EdgeInsets.all(16.0),
@@ -116,7 +117,7 @@ class _RegisterPageState extends State<RegisterPage> {
               )
             ],
           ),
-        ),
+        //),
       ),
     );
   }

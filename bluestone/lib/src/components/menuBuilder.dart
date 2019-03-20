@@ -16,25 +16,6 @@ class MenuBuilder {
   /// which type of IconButton it will be building a list for.
   static List<IconButton> buildItems(String type, FirebaseUser user) {
     var list = new List<IconButton>();
-    // var userId = user.uid;
-    // if (type == "Card") {
-    //   final Future<QuerySnapshot> privateResults =
-    //       fireStoreSnapshot("Cards/Private/UIDs/", "UID", userId);
-    //   // final Future<QuerySnapshot> publicResults = fireStoreSnapshot("Cards/Public/UIDs/", "UID", userId);
-    //   // FirebaseDatabase.instance.reference().child("card").reference().child("private").reference().child("UID").once().then((DataSnapshot snapshot) {
-
-    //   // });
-    //   // FirebaseDatabase.instance.reference().child("card").reference().child("public").reference().child("UID").once();
-
-    // } else if (type == "Calendar") {
-    //   // add all of the calendars save for a user here.
-    // } else {
-    //   print(
-    //       "Error: invalid type - Type being passed in was unable to be determined. (menuBuilder.dart - line 24)");
-    //   throw new Exception(
-    //       "Error: invalid type - Type being passed in was unable to be determined.");
-    // }
-
     var addIcon = new IconButton(
         icon: Icon(Icons.add),
         iconSize: 125.0,
@@ -69,8 +50,6 @@ Widget build(BuildContext context) {
           //return new ListView(children: getExpenseItems(snapshot))
           break;
       }
-      //return snapshot.data.documents.map((document) => new Text(document['some_field'])).toList()
-      //return snapshot.data.documents.map((document) => new Text(document['some_field']).toList(),
     },
   );
 }
