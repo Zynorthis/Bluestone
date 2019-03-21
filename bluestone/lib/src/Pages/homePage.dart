@@ -325,157 +325,161 @@ class _MyHomePageState extends State<MyHomePage> {
                 }
               },
             ),
-            Column(
-                children: <Widget>[
-                  Container(
-                    margin: const EdgeInsets.all(10.0),
-                    // decoration:
-                    //     BoxDecoration(border: Border.all(color: Colors.grey)),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Expanded(
-                          flex: 4,
-                          child: TextField(
-                            controller: _searchBar,
-                            maxLength: 18,
-                            enableInteractiveSelection: true,
-                            decoration:
-                                InputDecoration(icon: Icon(Icons.search)),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                        Flexible(
-                          child: RaisedButton(
-                            child: Icon(Icons.send),
-                            onPressed: searchResults,
-                            elevation: 2,
-                            color: ThemeSettings.themeData.accentColor,
-                          ),
-                        ),
-                      ],
+            Column(children: <Widget>[
+              Container(
+                margin: const EdgeInsets.all(10.0),
+                // decoration:
+                //     BoxDecoration(border: Border.all(color: Colors.grey)),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                      flex: 4,
+                      child: TextField(
+                        controller: _searchBar,
+                        maxLength: 18,
+                        enableInteractiveSelection: true,
+                        decoration: InputDecoration(icon: Icon(Icons.search)),
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 10.0,
-                  ),
-                  (haveResults)
-                      ? Expanded(
-                          child: FutureBuilder(
-                            future: searchResults(),
-                            builder: (_, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return new Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              } else if (snapshot.connectionState ==
-                                  ConnectionState.none) {
-                                return new Text(
-                                    " Error: Connnection Timeout. ");
-                              } else {
-                                return ListView.builder(
-                                  itemCount: snapshot.data.length,
-                                  itemBuilder: (_, index) {
-                                    return Container(
-                                      margin: EdgeInsets.fromLTRB(
-                                          15.0, 20.0, 15.0, 20.0),
-                                      decoration: BoxDecoration(
-                                          color: ThemeSettings
-                                              .themeData.accentColor,
-                                          shape: BoxShape.rectangle),
-                                      child: FlatButton.icon(
-                                        label: Expanded(
-                                          child: Text(
-                                            "${snapshot.data[index].data["title"]}",
-                                            style: TextStyle(fontSize: 20.0),
-                                          ),
+                    SizedBox(
+                      width: 10.0,
+                    ),
+                    Flexible(
+                      child: RaisedButton(
+                        child: Icon(Icons.send),
+                        onPressed: () {
+                          haveResults = !haveResults;
+                          setState(() {});
+                        },
+                        elevation: 2,
+                        color: ThemeSettings.themeData.accentColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              (haveResults)
+                  ? Expanded(
+                      child: FutureBuilder(
+                        future: searchResults(),
+                        builder: (_, snapshot) {
+                          if (snapshot.data.hashCode == 481762257) {
+                            return Text("No Results found");
+                          } else {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return new Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            } else if (snapshot.connectionState ==
+                                ConnectionState.none) {
+                              return new Text(" Error: Connnection Timeout. ");
+                            } else {
+                              return ListView.builder(
+                                itemCount: snapshot.data.length,
+                                itemBuilder: (_, index) {
+                                  return Container(
+                                    margin: EdgeInsets.fromLTRB(
+                                        15.0, 20.0, 15.0, 20.0),
+                                    decoration: BoxDecoration(
+                                        color:
+                                            ThemeSettings.themeData.accentColor,
+                                        shape: BoxShape.rectangle),
+                                    child: FlatButton.icon(
+                                      label: Expanded(
+                                        child: Text(
+                                          "${snapshot.data[index].data["title"]}",
+                                          style: TextStyle(fontSize: 20.0),
                                         ),
-                                        icon: (snapshot.data[index]
-                                                        .data["type"] ==
-                                                    "Sticky" ||
-                                                snapshot.data[index]
-                                                        .data["type"] ==
-                                                    "Bullet" ||
-                                                snapshot.data[index]
-                                                        .data["type"] ==
-                                                    "Checkbox")
-                                            ? Icon(
-                                                Icons.view_headline,
-                                                size: 75.0,
-                                              )
-                                            : Icon(
-                                                Icons.calendar_today,
-                                                size: 75.0,
-                                              ),
-                                        onPressed: () {
-                                          print(
-                                              "${snapshot.data[index].data["title"]} was tapped. DocumentID: ${snapshot.data[index].documentID}");
-                                          switch (snapshot
-                                              .data[index].data["type"]) {
-                                            case "Sticky":
-                                              FirestoreContent.stickySnap =
-                                                  snapshot.data[index];
-                                              FirestoreContent.stickyDoc =
-                                                  Firestore.instance.document(
-                                                      "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/${FirestoreContent.stickySnap.documentID}");
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          StickyDisplay()));
-                                              break;
-                                            case "Bullet":
-                                              FirestoreContent.bulletSnap =
-                                                  snapshot.data[index];
-                                              FirestoreContent.bulletDoc =
-                                                  Firestore.instance.document(
-                                                      "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/${FirestoreContent.bulletSnap.documentID}");
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          BulletPage()));
-                                              break;
-                                            case "Checkbox":
-                                              FirestoreContent.checkboxSnap =
-                                                  snapshot.data[index];
-                                              FirestoreContent.checkboxDoc =
-                                                  Firestore.instance.document(
-                                                      "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/${FirestoreContent.checkboxSnap.documentID}");
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          CheckboxPage()));
-                                              break;
-                                            default:
-                                              FirestoreContent.calendarSnap =
-                                                  snapshot.data[index];
-                                              FirestoreContent.calendarDoc =
-                                                  Firestore.instance.document(
-                                                      "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/${FirestoreContent.calendarSnap.documentID}");
-                                              navigateToCalendar(snapshot
-                                                  .data[index].data["title"]);
-                                          }
-                                        },
                                       ),
-                                    );
-                                  },
-                                );
-                              }
-                            },
-                          ),
-                        )
-                      : Expanded(
-                          child: Text(
-                            "Search For Calendars and Cards here.",
-                            style: TextStyle(fontSize: 18.0),
-                          ),
-                        )
-                ]),
+                                      icon:
+                                          (snapshot.data[index].data["type"] ==
+                                                      "Sticky" ||
+                                                  snapshot.data[index]
+                                                          .data["type"] ==
+                                                      "Bullet" ||
+                                                  snapshot.data[index]
+                                                          .data["type"] ==
+                                                      "Checkbox")
+                                              ? Icon(
+                                                  Icons.view_headline,
+                                                  size: 75.0,
+                                                )
+                                              : Icon(
+                                                  Icons.calendar_today,
+                                                  size: 75.0,
+                                                ),
+                                      onPressed: () {
+                                        print(
+                                            "${snapshot.data[index].data["title"]} was tapped. DocumentID: ${snapshot.data[index].documentID}");
+                                        switch (
+                                            snapshot.data[index].data["type"]) {
+                                          case "Sticky":
+                                            FirestoreContent.stickySnap =
+                                                snapshot.data[index];
+                                            FirestoreContent.stickyDoc =
+                                                Firestore.instance.document(
+                                                    "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/${FirestoreContent.stickySnap.documentID}");
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        StickyDisplay()));
+                                            break;
+                                          case "Bullet":
+                                            FirestoreContent.bulletSnap =
+                                                snapshot.data[index];
+                                            FirestoreContent.bulletDoc =
+                                                Firestore.instance.document(
+                                                    "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/${FirestoreContent.bulletSnap.documentID}");
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        BulletPage()));
+                                            break;
+                                          case "Checkbox":
+                                            FirestoreContent.checkboxSnap =
+                                                snapshot.data[index];
+                                            FirestoreContent.checkboxDoc =
+                                                Firestore.instance.document(
+                                                    "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/${FirestoreContent.checkboxSnap.documentID}");
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        CheckboxPage()));
+                                            break;
+                                          default:
+                                            FirestoreContent.calendarSnap =
+                                                snapshot.data[index];
+                                            FirestoreContent.calendarDoc =
+                                                Firestore.instance.document(
+                                                    "Calendars/Live/UIDs/${CurrentLoggedInUser.user.uid}/CalendarIDs/${FirestoreContent.calendarSnap.documentID}");
+                                            navigateToCalendar(snapshot
+                                                .data[index].data["title"]);
+                                        }
+                                      },
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+                          }
+                        },
+                      ),
+                    )
+                  : Expanded(
+                      child: Text(
+                        "Search For Calendars and Cards here.",
+                        style: TextStyle(fontSize: 18.0),
+                      ),
+                    )
+            ]),
           ],
         ),
       ),
@@ -647,25 +651,27 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future searchResults() async {
-    var collectionOfResults;
-    collectionOfResults += await Firestore.instance
-        .collection("Cards/Live/All")
-        .where("title", isEqualTo: _searchBar.text)
-        .getDocuments();
-    collectionOfResults += await Firestore.instance
-        .collection("Card/Live/All")
+    // QuerySnapshot collectionOfResults;
+    QuerySnapshot creatorRef = await Firestore.instance
+        .collection("AllDocuments")
         .where("creatorRef", isEqualTo: _searchBar.text)
         .getDocuments();
-    collectionOfResults += await Firestore.instance
-        .collection("Calendars/Live/All")
+    QuerySnapshot titleRef = await Firestore.instance
+        .collection("AllDocuments")
         .where("title", isEqualTo: _searchBar.text)
         .getDocuments();
-    collectionOfResults += await Firestore.instance
-        .collection("Calendars/Live/All")
-        .where("creatorRef", isEqualTo: _searchBar.text)
-        .getDocuments();
-    (collectionOfResults != null) ? haveResults = true : haveResults = false;
-    return collectionOfResults.documents;
+
+    if (creatorRef.documents.length != 0 && titleRef.documents.length != 0) {
+      creatorRef.documents.addAll(titleRef.documents);
+    } else if (creatorRef.documents.length != 0 && titleRef.documents.length == 0) {
+      return creatorRef.documents;
+    } else if (creatorRef.documents.length == 0 && titleRef.documents.length != 0) {
+      return titleRef.documents;
+    } else if (creatorRef.documents.length == 0 && titleRef.documents.length == 0) {
+      return Future;
+    } else {
+      return Future;
+    }
   }
 
   Icon iconMapping() {

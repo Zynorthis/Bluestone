@@ -22,91 +22,90 @@ class _SignInManagerState extends State<SignInManager> {
         textTheme: ThemeSettings.customTheme,
       ),
       backgroundColor: ThemeSettings.themeData.backgroundColor,
-      body: Form(
-        key: _formKey,
-        //child: SingleChildScrollView(
-          child: 
-          Column(
-            children: <Widget>[
-              // SizedBox(
-              //   height: 50.0,
-              // ),
-              Container(
-                child: (isValid)
-                    ? Text("")
-                    : Text(
-                        "Unable to sign in, please try again.",
-                        style: TextStyle(color: Colors.red),
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 50.0,
+                ),
+                Container(
+                  child: (isValid)
+                      ? Text("")
+                      : Text(
+                          "Unable to sign in, please try again.",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                ),
+                Container(
+                  width: 375.0,
+                  padding: EdgeInsets.all(16.0),
+                  child: TextFormField(
+                    validator: (input) {
+                      if (input.isEmpty) {
+                        return "Please provide an email address.";
+                      } else if (!input.contains("@")) {
+                        return "Please provide a valid email address.";
+                      } else if (input.contains(" ")) {
+                        input.trim();
+                        input.trimLeft();
+                        input.trimRight();
+                        return input;
+                      }
+                    },
+                    onSaved: (input) => _email = input,
+                    decoration: InputDecoration(
+                      labelText: "Email Address",
+                      contentPadding: EdgeInsets.all(10.0),
+                      hintText: "Input an Email Address",
+                      icon: new Icon(
+                        Icons.email,
+                        color: ThemeSettings.themeData.primaryColor,
                       ),
-              ),
-              Container(
-                width: 375.0,
-                padding: EdgeInsets.all(16.0),
-                child: TextFormField(
-                  validator: (input) {
-                    if (input.isEmpty) {
-                      return "Please provide an email address.";
-                    } else if (!input.contains("@")) {
-                      return "Please provide a valid email address.";
-                    } else if (input.contains(" ")) {
-                      input.trim();
-                      input.trimLeft();
-                      input.trimRight();
-                      return input;
-                    }
-                  },
-                  onSaved: (input) => _email = input,
-                  decoration: InputDecoration(
-                    labelText: "Email Address",
-                    contentPadding: EdgeInsets.all(10.0),
-                    hintText: "Input an Email Address",
-                    icon: new Icon(
-                      Icons.email,
-                      color: ThemeSettings.themeData.primaryColor,
                     ),
                   ),
                 ),
-              ),
-              Container(
-                width: 375.0,
-                padding: EdgeInsets.all(16.0),
-                child: TextFormField(
-                  validator: (input) {
-                    if (input.isEmpty) {
-                      return "Please provide a password.";
-                    } else if (input.length < 6 || input.length > 20) {
-                      return "Passwords must be between 6-20 characters long.";
-                    }
-                  },
-                  onSaved: (input) => _password = input,
-                  decoration: InputDecoration(
-                    labelText: "Password",
-                    contentPadding: EdgeInsets.all(10.0),
-                    hintText: "Input a Password",
-                    icon: new Icon(
-                      Icons.lock,
-                      color: ThemeSettings.themeData.primaryColor,
+                Container(
+                  width: 375.0,
+                  padding: EdgeInsets.all(16.0),
+                  child: TextFormField(
+                    validator: (input) {
+                      if (input.isEmpty) {
+                        return "Please provide a password.";
+                      } else if (input.length < 6 || input.length > 20) {
+                        return "Passwords must be between 6-20 characters long.";
+                      }
+                    },
+                    onSaved: (input) => _password = input,
+                    decoration: InputDecoration(
+                      labelText: "Password",
+                      contentPadding: EdgeInsets.all(10.0),
+                      hintText: "Input a Password",
+                      icon: new Icon(
+                        Icons.lock,
+                        color: ThemeSettings.themeData.primaryColor,
+                      ),
                     ),
+                    obscureText: true,
                   ),
-                  obscureText: true,
                 ),
-              ),
-              RaisedButton(
-                onPressed: () async {
-                  CurrentLoggedInUser.user = null;
-                  await signIn();
-                  while (CurrentLoggedInUser.user == null) {
-                    // showLoadingIndicator();
-                  }
-                  // final snackBar = SnackBar(content: Text("Logging in..."));
-                  // Scaffold.of(context).showSnackBar(snackBar);
-                },
-                child: Text("Sign In"),
-                color: ThemeSettings.themeData.accentColor,
-              )
-            ],
-          ),
-        //),
+                RaisedButton(
+                  onPressed: () async {
+                    CurrentLoggedInUser.user = null;
+                    await signIn();
+                    while (CurrentLoggedInUser.user == null) {
+                      // showLoadingIndicator();
+                    }
+                    // final snackBar = SnackBar(content: Text("Logging in..."));
+                    // Scaffold.of(context).showSnackBar(snackBar);
+                  },
+                  child: Text("Sign In"),
+                  color: ThemeSettings.themeData.accentColor,
+                )
+              ],
+            ),
+        ),
       ),
     );
   }
