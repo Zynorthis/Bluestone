@@ -53,9 +53,9 @@ class _StickyDisplayState extends State<StickyDisplay> {
                               FirestoreContent.stickyDoc
                                   .delete()
                                   .whenComplete(() {
+                                print("Document Deleted.");
                                 setState(() {});
                               }).catchError((e) => print(e));
-                              print("Document Deleted.");
                               print("Removing Duplicate Document...");
                               FirestoreContent.duplicateData
                                   .delete()

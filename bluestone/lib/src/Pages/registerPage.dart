@@ -19,15 +19,14 @@ class _RegisterPageState extends State<RegisterPage> {
         title: Text("Register"),
       ),
       backgroundColor: ThemeSettings.themeData.backgroundColor,
-      body: Form(
-        key: _formKey,
-        // child: SingleChildScrollView(
-          child: 
-          Column(
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
             children: <Widget>[
-              // SizedBox(
-              //   height: 50.0,
-              // ),
+              SizedBox(
+                height: 50.0,
+              ),
               Container(
                 width: 375.0,
                 padding: EdgeInsets.all(16.0),
@@ -117,7 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
               )
             ],
           ),
-        //),
+        ),
       ),
     );
   }
@@ -129,7 +128,6 @@ class _RegisterPageState extends State<RegisterPage> {
         FirebaseUser user = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: _email, password: _password);
         user.sendEmailVerification();
-        //Navigator.of(context).pop();
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => SignInManager()));
       } catch (error) {

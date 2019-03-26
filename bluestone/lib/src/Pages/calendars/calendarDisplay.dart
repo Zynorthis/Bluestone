@@ -114,19 +114,21 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
         appBar: AppBar(
           title: Text(FirestoreContent.calendarSnap.data["title"]),
           actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.edit),
-              tooltip: "Edit calendar settings",
-              onPressed: () {
-                print("Begin Calendar Edit");
-                print(
-                    "Current Calendar: ${FirestoreContent.calendarSnap.documentID}");
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CalendarEditPage()));
-              },
-            ),
+            (FirestoreContent.calendarSnap.data["scope"] == true)
+                ? IconButton(
+                    icon: Icon(Icons.edit),
+                    tooltip: "Edit calendar settings",
+                    onPressed: () {
+                      print("Begin Calendar Edit");
+                      print(
+                          "Current Calendar: ${FirestoreContent.calendarSnap.documentID}");
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => CalendarEditPage()));
+                    },
+                  )
+                : null,
             IconButton(
               icon: Icon(Icons.delete),
               onPressed: () {
@@ -446,7 +448,7 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
     Map<String, dynamic> data = <String, dynamic>{
       "title": "New Event",
       "description":
-          "Beep boop, I am a new Event! Click the edit button to change me!",
+          "Beep boop, I am a new Event! Tap the edit button to change me!",
       "date": _currentDate,
       "startTime": DateTime(
           _currentDate.year, _currentDate.month, _currentDate.day, 0, 0),

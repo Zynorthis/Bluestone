@@ -63,6 +63,8 @@ class _CheckboxPageState extends State<CheckboxPage> {
             ),
         ],
       ),
+      backgroundColor: ThemeSettings.themeData.backgroundColor,
+      body: null
     );
   }
 }

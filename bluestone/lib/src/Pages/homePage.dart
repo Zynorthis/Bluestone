@@ -31,6 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        bottomNavigationBar: BottomAppBar(),
         appBar: AppBar(
           title: Text(
             widget.title,
@@ -328,8 +329,6 @@ class _MyHomePageState extends State<MyHomePage> {
             Column(children: <Widget>[
               Container(
                 margin: const EdgeInsets.all(10.0),
-                // decoration:
-                //     BoxDecoration(border: Border.all(color: Colors.grey)),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -651,24 +650,29 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future searchResults() async {
-    // QuerySnapshot collectionOfResults;
-    QuerySnapshot creatorRef = await Firestore.instance
-        .collection("AllDocuments")
-        .where("creatorRef", isEqualTo: _searchBar.text)
+    QuerySnapshot cardRef = await Firestore.instance
+        .collection("Cards/Live/All")
+        .where("title", isEqualTo: _searchBar.text)
         .getDocuments();
-    QuerySnapshot titleRef = await Firestore.instance
-        .collection("AllDocuments")
+    QuerySnapshot calendarRef = await Firestore.instance
+        .collection("Calendars/Live/All")
         .where("title", isEqualTo: _searchBar.text)
         .getDocuments();
 
-    if (creatorRef.documents.length != 0 && titleRef.documents.length != 0) {
-      creatorRef.documents.addAll(titleRef.documents);
-    } else if (creatorRef.documents.length != 0 && titleRef.documents.length == 0) {
-      return creatorRef.documents;
-    } else if (creatorRef.documents.length == 0 && titleRef.documents.length != 0) {
-      return titleRef.documents;
-    } else if (creatorRef.documents.length == 0 && titleRef.documents.length == 0) {
-      return Future;
+    if (cardRef.documents.length != 0 && calendarRef.documents.length != 0) {
+      cardRef.documents.addAll(calendarRef.documents);
+    } else if (cardRef.documents.length != 0 &&
+        calendarRef.documents.length == 0) {
+      cardRef.documents.removeWhere((doc) =>
+          doc.data["creatorRef"] == CurrentLoggedInUser.user.uid ||
+          doc.data["visibility"] == false);
+      return cardRef.documents;
+    } else if (cardRef.documents.length == 0 &&
+        calendarRef.documents.length != 0) {
+      calendarRef.documents.removeWhere((doc) =>
+          doc.data["creatorRef"] == CurrentLoggedInUser.user.uid ||
+          doc.data["visibility"] == false);
+      return calendarRef.documents;
     } else {
       return Future;
     }

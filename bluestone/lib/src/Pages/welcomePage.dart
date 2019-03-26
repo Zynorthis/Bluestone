@@ -1,3 +1,4 @@
+import 'package:bluestone/src/Pages/testingFile.dart';
 import 'package:bluestone/src/components/extras.dart';
 import 'package:bluestone/src/Pages/loginPage.dart';
 import 'package:bluestone/src/Pages/registerPage.dart';
@@ -33,6 +34,12 @@ class _WelcomePageState extends State<WelcomePage> {
               child: Text("Register", textScaleFactor: 2.0),
               color: ThemeSettings.themeData.accentColor,
             ),
+            RaisedButton(
+              padding: EdgeInsets.fromLTRB(50.0, 10.0, 50.0, 10.0),
+              onPressed: navigateToTestPage,
+              child: Text("Testing", textScaleFactor: 2.0),
+              color: ThemeSettings.themeData.accentColor,
+            ),
           ],
         ),
       ),
@@ -51,5 +58,12 @@ class _WelcomePageState extends State<WelcomePage> {
         context,
         MaterialPageRoute(
             builder: (context) => RegisterPage(), fullscreenDialog: true));
+  }
+
+  void navigateToTestPage() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => HomePage(), fullscreenDialog: true));
   }
 }

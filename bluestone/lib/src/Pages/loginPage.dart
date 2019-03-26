@@ -139,7 +139,6 @@ class _SignInManagerState extends State<SignInManager> {
       } catch (error) {
         print(error.message);
         isValid = false;
-        return;
       }
     }
   }
