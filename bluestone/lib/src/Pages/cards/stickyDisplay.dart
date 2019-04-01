@@ -1,5 +1,6 @@
 import 'package:bluestone/src/components/extras.dart';
 import 'package:bluestone/src/components/firebaseContent.dart';
+import 'package:bluestone/src/components/menuBuilder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -20,71 +21,15 @@ class _StickyDisplayState extends State<StickyDisplay> {
 
   @override
   Widget build(BuildContext context) {
+    documentReference = "Sticky";
     _titleController.text = titleContent;
     _textBodyController.text = textBodyContent;
     return Scaffold(
         appBar: AppBar(
           title: Text("${_titleController.text}"),
-          flexibleSpace: Container(
-            alignment: Alignment(0.85, 0.6),
-            child: IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: () {
-                print("Delete button Tapped.");
-                return showDialog(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (BuildContext context) {
-                      return new AlertDialog(
-                        content:
-                            new Text("Are you sure you want to delete this?"),
-                        actions: <Widget>[
-                          new FlatButton(
-                            child: new Text("Yes"),
-                            onPressed: () {
-                              print(
-                                  "Removing ${FirestoreContent.stickySnap.documentID}...");
-                              FirestoreContent.setDocumentReference(
-                                  "${FirestoreContent.stickySnap.documentID}",
-                                  "Cards");
-                              FirestoreContent.stickyDoc = Firestore.instance
-                                  .document(
-                                      "Cards/Live/UIDs/${CurrentLoggedInUser.user.uid}/CardIDs/${FirestoreContent.stickySnap.documentID}");
-                              FirestoreContent.stickyDoc
-                                  .delete()
-                                  .whenComplete(() {
-                                print("Document Deleted.");
-                                setState(() {});
-                              }).catchError((e) => print(e));
-                              print("Removing Duplicate Document...");
-                              FirestoreContent.duplicateData
-                                  .delete()
-                                  .whenComplete(() {
-                                print("Duplicate Document Deleted.");
-                                setState(() {});
-                              }).catchError((e) => print(e));
-
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                            },
-                          ),
-                          new FlatButton(
-                            child: new Text("No"),
-                            onPressed: () {
-                              print(
-                                  "${FirestoreContent.stickySnap.documentID} will not be deleted.");
-                              Navigator.pop(context);
-                            },
-                          ),
-                        ],
-                      );
-                    });
-              },
-              color: Colors.white,
-              tooltip: "Tap to Delete",
-              iconSize: 25.0,
-            ),
-          ),
+          actions: <Widget>[
+            deleteButton(context),
+          ],
         ),
         backgroundColor: ThemeSettings.themeData.backgroundColor,
         floatingActionButton: new FloatingActionButton.extended(

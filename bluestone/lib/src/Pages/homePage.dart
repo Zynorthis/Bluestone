@@ -31,7 +31,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        bottomNavigationBar: BottomAppBar(),
+        //bottomNavigationBar: BottomAppBar(),
         appBar: AppBar(
           title: Text(
             widget.title,

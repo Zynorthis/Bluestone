@@ -128,7 +128,10 @@ class _CalendarDisplayState extends State<CalendarDisplay> {
                               builder: (context) => CalendarEditPage()));
                     },
                   )
-                : null,
+                : IconButton(
+                  icon: Icon(Icons.delete_forever),
+                  onPressed: null,
+                ),
             IconButton(
               icon: Icon(Icons.delete),
               onPressed: () {

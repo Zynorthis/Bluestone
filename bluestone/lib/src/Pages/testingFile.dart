@@ -1,4 +1,5 @@
 import 'package:bluestone/src/components/extras.dart';
+import 'package:bluestone/src/components/menuBuilder.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -20,15 +21,7 @@ class HomePageState extends State<HomePage> {
               ),
               onPressed: () {},
             ),
-            IconButton(
-              icon: Icon(
-                Theme.of(context).platform == TargetPlatform.iOS
-                    ? Icons.more_horiz
-                    : Icons.more_vert,
-                semanticLabel: 'Show menu actions',
-              ),
-              onPressed: () {},
-            ),
+            menuAction(context),
           ],
         ),
         backgroundColor: ThemeSettings.themeData.backgroundColor,
