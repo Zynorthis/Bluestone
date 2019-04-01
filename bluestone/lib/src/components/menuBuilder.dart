@@ -67,6 +67,34 @@ Widget menuAction(BuildContext context) {
   );
 }
 
+Widget popupMenubutton(BuildContext context) {
+  return PopupMenuButton(
+    onSelected: choiceAction,
+    itemBuilder: (BuildContext context) {
+      return PopupMenuChoices.popupMenuChoices.map((String choice){
+        return PopupMenuItem(
+          value: choice,
+          child: Text(choice),
+        );
+      }).toList();
+    },
+    tooltip: "Tap for more options",
+  );
+}
+
+choiceAction(String choice) {
+  print("$choice was selected");
+}
+
+class PopupMenuChoices{
+  static const String az = "A-Z";
+  static const String za = "Z-A";
+  static List<String> popupMenuChoices = <String>[
+    az,
+    za,
+  ];
+}
+
 Widget deleteButton(BuildContext context) {
   return IconButton(
     icon: Icon(

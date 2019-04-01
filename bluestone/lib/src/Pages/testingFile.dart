@@ -7,21 +7,17 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
+  static final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
         appBar: AppBar(
           title: const Text("Dev Testing Page"),
           elevation: 0.0,
           actions: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.delete,
-                semanticLabel: "Delete",
-              ),
-              onPressed: () {},
-            ),
-            menuAction(context),
+            deleteButton(context),
+            popupMenubutton(context),
           ],
         ),
         backgroundColor: ThemeSettings.themeData.backgroundColor,
@@ -37,9 +33,7 @@ class HomePageState extends State<HomePage> {
           tooltip: "Floating Action Button",
           onPressed: () {
             print("Floating Action Button Tapped.");
-            Scaffold.of(context).showSnackBar(
-              const SnackBar(content: Text('Dev Testing, please hold...')),
-            );
+            _showSnackbar();
           },
           child: Icon(Icons.add, semanticLabel: "Action"),
         ),
@@ -54,6 +48,25 @@ class HomePageState extends State<HomePage> {
         newIndex -= 1;
       }
     });
+  }
+
+  static void _showSnackbar() {
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: Text("Dev testing please hold..."),
+        action: SnackBarAction(
+          label: "Undo",
+          onPressed: () {
+            print("Undo Button Tapped.");
+            _scaffoldKey.currentState.showSnackBar(
+              SnackBar(
+                content: Text("Undo button tapped."),
+              )
+            );
+          },
+        ),
+      ),
+    );
   }
 }
 
