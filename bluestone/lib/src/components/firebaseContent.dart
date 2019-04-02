@@ -6,7 +6,7 @@ class CurrentLoggedInUser {
   static FirebaseUser user;
 }
 
-String documentReference;
+String documentReference = "";
 
 /// A class that holds data for various static instances of [DocumentReference]s
 /// and [DocumentSnapshot]s

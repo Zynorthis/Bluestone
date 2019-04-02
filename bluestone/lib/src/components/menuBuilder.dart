@@ -63,7 +63,9 @@ Widget menuAction(BuildContext context) {
           : Icons.more_vert,
       semanticLabel: 'Show menu actions',
     ),
-    onPressed: () {},
+    onPressed: () {
+      print("Show menu actions button tapped.");
+    },
   );
 }
 
@@ -132,6 +134,23 @@ Widget deleteButton(BuildContext context) {
           );
         },
       );
+    },
+  );
+}
+
+Widget editButton(BuildContext context){
+  return IconButton(
+    icon: Icon(
+      Icons.edit,
+      semanticLabel: "Edit Button",
+      color: Colors.white,
+    ),
+    tooltip: "Tap to edit card details",
+    onPressed: () {
+      print("Edit Button Tapped.");
+      // TODO:
+      // - Add a way to check document that will be referenced
+      // - Add navigator to edit page for different documents
     },
   );
 }
